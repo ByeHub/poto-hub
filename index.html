@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" class="dark scroll-smooth">
 <head>
-<meta name="monetag" content="2f14f15258b9e9bc2e946c9b54243d15">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lumina Photo Gallery | Admin & Visitor Activity Portal</title>
-  <meta name="description" content="A modern, responsive photo gallery with admin management, user authentication, and admin-only visitor activity logging.">
+  <title>Lumina Photo Gallery | Admin & External Link Showcase</title>
+  <meta name="description" content="A modern photo gallery web application featuring admin management, external link integration, user authentication, and admin-only visitor history tracking.">
   
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -87,7 +86,7 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans flex flex-col antialiased selection:bg-brand-500 selection:text-white">
 
-  <!-- Ambient Glow Effects -->
+  <!-- Ambient Glow Backgrounds -->
   <div class="fixed top-0 left-1/4 -z-10 w-96 h-96 bg-brand-600/15 rounded-full blur-3xl pointer-events-none"></div>
   <div class="fixed bottom-0 right-1/4 -z-10 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -108,7 +107,7 @@
         </div>
       </a>
 
-      <!-- Center Navigation Tabs -->
+      <!-- Center Tabs -->
       <nav class="hidden md:flex items-center space-x-1 p-1 bg-slate-900/80 rounded-xl border border-slate-800">
         <button id="navTabGallery" onclick="navigateTo('gallery')" class="px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 text-white bg-slate-800 shadow-sm flex items-center gap-2">
           <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -143,13 +142,13 @@
         <div class="max-w-2xl space-y-3 z-10 relative">
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-300 text-xs font-semibold tracking-wide">
             <span class="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></span>
-            Curated Visual Collection
+            Curated Visual Collection with External Links
           </div>
           <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
             Discover Captivating <span class="bg-gradient-to-r from-brand-400 to-indigo-400 bg-clip-text text-transparent">Photography</span>
           </h1>
           <p class="text-slate-400 text-sm sm:text-base leading-relaxed">
-            Browse through photographs uploaded by the administrator. Click any picture to explore in high-definition with complete narratives.
+            Browse through photographs curated by the administrator. Click any picture to explore in high-definition, read full narratives, and visit associated external destination links.
           </p>
         </div>
 
@@ -170,7 +169,7 @@
                 type="text" 
                 id="gallerySearchInput" 
                 oninput="handleGallerySearch()" 
-                placeholder="Search by title or description..." 
+                placeholder="Search title, description, or link..." 
                 class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl pl-9 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
               >
             </div>
@@ -198,7 +197,7 @@
         </div>
         <h3 class="text-lg font-bold text-white mb-1">Gallery is Empty</h3>
         <p class="text-slate-400 text-sm max-w-md mx-auto mb-6">
-          No photographs have been published yet. Log in to the administrator portal to upload and showcase your photos.
+          No photographs have been published yet. Log in to the administrator portal to upload and showcase your photos with descriptions and external links.
         </p>
         <button onclick="openAdminLoginModal()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 text-white font-medium text-sm hover:from-brand-500 hover:to-indigo-500 transition shadow-lg shadow-brand-500/20">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -210,7 +209,7 @@
 
     </section>
 
-    <!-- VIEW 2: ADMIN DASHBOARD (Strictly protected - Photo CRUD + Visitor History Logs) -->
+    <!-- VIEW 2: ADMIN DASHBOARD (Protected: Photo CRUD, External Links, and Visitor History) -->
     <section id="viewAdmin" class="hidden space-y-8">
       
       <!-- Admin Header with Stats -->
@@ -219,11 +218,11 @@
           <div>
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-semibold tracking-wide mb-3">
               <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              Admin Authorization Active &bull; chathumal
+              Admin Session &bull; chathumal
             </div>
             <h1 class="text-3xl font-extrabold text-white">Administrator Control Panel</h1>
             <p class="text-slate-400 text-sm mt-1">
-              Full privileges: manage photos, upload new media, and inspect real-time visitor and user activity logs.
+              Upload, edit, link external destinations, and inspect real-time visitor activity history.
             </p>
           </div>
 
@@ -244,13 +243,13 @@
           </div>
         </div>
 
-        <!-- Admin Sub-navigation Tabs (Photos Management vs Visitor Activity History) -->
+        <!-- Admin Sub-navigation Tabs -->
         <div class="flex items-center gap-2 mt-6 pt-6 border-t border-slate-800/80">
           <button id="adminSubTabPhotos" onclick="switchAdminSubTab('photos')" class="px-4 py-2 rounded-xl text-xs font-semibold transition bg-brand-600 text-white flex items-center gap-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
             </svg>
-            Photo Management & Upload
+            Photo Management & Links
           </button>
           
           <button id="adminSubTabHistory" onclick="switchAdminSubTab('history')" class="px-4 py-2 rounded-xl text-xs font-semibold transition text-slate-400 hover:text-white hover:bg-slate-800 flex items-center gap-2">
@@ -263,7 +262,7 @@
         </div>
       </div>
 
-      <!-- ================= SUB-PANEL A: PHOTO MANAGEMENT ================= -->
+      <!-- ================= SUB-PANEL A: PHOTO MANAGEMENT & UPLOADS ================= -->
       <div id="adminPanelPhotos" class="space-y-8">
         
         <!-- Upload New Photo Form -->
@@ -276,7 +275,7 @@
                 </svg>
                 Upload New Photograph
               </h2>
-              <p class="text-xs text-slate-400 mt-0.5">Publish a photograph via local file upload or direct web URL.</p>
+              <p class="text-xs text-slate-400 mt-0.5">Publish a photograph with title, description, and an optional external link destination.</p>
             </div>
           </div>
 
@@ -340,7 +339,7 @@
                 </div>
               </div>
 
-              <!-- Right: Title, Description & Action (7 cols) -->
+              <!-- Right: Title, Description, External Link & Action (7 cols) -->
               <div class="lg:col-span-7 space-y-4 flex flex-col justify-between">
                 <div class="space-y-4">
                   <!-- Title Field -->
@@ -364,11 +363,33 @@
                     </label>
                     <textarea 
                       id="uploadDescription" 
-                      rows="5" 
+                      rows="4" 
                       required 
                       placeholder="Provide details, narrative, location, or technical capture information..." 
                       class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
                     ></textarea>
+                  </div>
+
+                  <!-- External Link Field (NEW) -->
+                  <div>
+                    <label for="uploadLinkUrl" class="block text-xs font-semibold text-slate-300 mb-1 flex items-center justify-between">
+                      <span class="flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
+                        External Link URL <span class="text-slate-500 font-normal">(Optional)</span>
+                      </span>
+                      <span class="text-[11px] text-slate-400">Opens in new browser tab</span>
+                    </label>
+                    <input 
+                      type="url" 
+                      id="uploadLinkUrl" 
+                      placeholder="https://example.com/photographer-portfolio or article" 
+                      class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+                    >
+                    <p class="text-[11px] text-slate-500 mt-1">
+                      When provided, a clickable link and "Visit Link" button will appear on the public photo card and in the viewer.
+                    </p>
                   </div>
                 </div>
 
@@ -401,7 +422,7 @@
                 </svg>
                 Manage & Edit Uploaded Photos
               </h2>
-              <p class="text-xs text-slate-400 mt-0.5">Use the Edit button to modify titles, descriptions, or images, or delete entries.</p>
+              <p class="text-xs text-slate-400 mt-0.5">Edit photo title, narrative, external link destination, or replace the photo image.</p>
             </div>
 
             <!-- Quick Filter in Admin -->
@@ -438,10 +459,10 @@
                 Restricted Admin Audit Log
               </div>
               <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                Visitor & User Activity Logs
+                Visitor & User Activity History
               </h2>
               <p class="text-xs text-slate-400 mt-0.5">
-                Audit trail recording visitor interactions, user registrations, logins, searches, and photo viewings. Only accessible to you.
+                Audit trail recording visitor interactions, external link clicks, photo views, user logins, and registrations. Only accessible to you.
               </p>
             </div>
 
@@ -469,14 +490,17 @@
               <button onclick="filterLogs('all')" id="logFilterAll" class="px-3 py-1.5 rounded-xl bg-brand-600 text-white font-semibold transition">
                 All Activities
               </button>
+              <button onclick="filterLogs('link_click')" id="logFilterLinks" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition">
+                External Link Clicks
+              </button>
               <button onclick="filterLogs('photo_view')" id="logFilterView" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition">
                 Photo Views
               </button>
               <button onclick="filterLogs('auth')" id="logFilterAuth" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition">
-                User Sign-Ins & Sign-Ups
+                Sign-Ins & Sign-Ups
               </button>
               <button onclick="filterLogs('admin')" id="logFilterAdmin" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition">
-                Admin CRUD Actions
+                Admin Actions
               </button>
             </div>
 
@@ -513,7 +537,7 @@
         <span>Storage: HTML5 LocalStorage active</span>
       </div>
       <div>
-        Lumina Photo Gallery &bull; Secure Single-File App
+        Lumina Photo Gallery &bull; External Link Enabled Single-File App
       </div>
       <div class="flex items-center gap-4">
         <button onclick="handleAdminTabClick()" class="hover:text-slate-300 transition flex items-center gap-1.5">
@@ -648,7 +672,7 @@
           </svg>
         </div>
         <h3 class="text-xl font-bold text-white">Administrator Portal</h3>
-        <p class="text-xs text-slate-400 mt-1">Enter your admin credentials to access management controls & visitor history.</p>
+        <p class="text-xs text-slate-400 mt-1">Enter your admin credentials to access photo management & visitor history.</p>
       </div>
 
       <form id="adminLoginForm" onsubmit="handleAdminLoginSubmit(event)" class="space-y-4">
@@ -681,7 +705,7 @@
     </div>
   </div>
 
-  <!-- 3. EDIT PHOTO MODAL (Admin Only) -->
+  <!-- 3. EDIT PHOTO MODAL (Admin Only: Title, Description, Image, and External Link URL) -->
   <div id="editPhotoModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 modal-backdrop-blur">
     <div class="relative w-full max-w-xl glass-modal rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-700/80 transition-all scale-95 opacity-0 duration-200" id="editModalContent">
       
@@ -697,9 +721,9 @@
           <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
           </svg>
-          Edit Photo Details
+          Edit Photograph & Link Details
         </h3>
-        <p class="text-xs text-slate-400 mt-1">Update title, narrative, or replace the photo image.</p>
+        <p class="text-xs text-slate-400 mt-1">Update title, narrative, external link destination, or replace the photo image.</p>
       </div>
 
       <form id="editPhotoForm" onsubmit="handleEditPhotoSubmit(event)" class="space-y-4">
@@ -725,6 +749,25 @@
             required 
             class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500"
           ></textarea>
+        </div>
+
+        <!-- External Link Field (NEW) -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+              </svg>
+              External Link URL (Optional)
+            </span>
+            <span class="text-[11px] text-slate-400">Leave blank to remove link</span>
+          </label>
+          <input 
+            type="url" 
+            id="editPhotoLinkUrl" 
+            placeholder="https://example.com/destination" 
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500"
+          >
         </div>
 
         <!-- Current / Replace Image Option -->
@@ -761,7 +804,7 @@
     </div>
   </div>
 
-  <!-- 4. INTERACTIVE LIGHTBOX MODAL (Public Gallery Viewer) -->
+  <!-- 4. INTERACTIVE LIGHTBOX MODAL (Public Gallery Viewer with External Link Trigger) -->
   <div id="lightboxModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-2 sm:p-6 bg-black/95 modal-backdrop-blur">
     
     <!-- Top Lightbox Toolbar -->
@@ -806,14 +849,27 @@
     <div class="w-full h-full max-w-6xl flex flex-col items-center justify-center p-2 sm:p-8 select-none">
       
       <!-- Image Display Area -->
-      <div class="relative flex-grow flex items-center justify-center max-h-[75vh] w-full overflow-hidden">
+      <div class="relative flex-grow flex items-center justify-center max-h-[72vh] w-full overflow-hidden">
         <img id="lightboxImg" src="" alt="Enlarged Photo" class="max-h-full max-w-full object-contain rounded-2xl shadow-2xl transition-transform duration-300">
       </div>
 
-      <!-- Bottom Caption Bar -->
-      <div class="w-full max-w-3xl mt-4 px-6 py-4 rounded-2xl bg-slate-900/80 border border-slate-800 backdrop-blur-md text-left transition-all">
-        <h3 id="lightboxTitle" class="text-lg font-bold text-white mb-1"></h3>
-        <p id="lightboxDescription" class="text-sm text-slate-300 leading-relaxed max-h-24 overflow-y-auto pr-2"></p>
+      <!-- Bottom Caption & External Link Bar -->
+      <div class="w-full max-w-3xl mt-4 px-6 py-4 rounded-2xl bg-slate-900/85 border border-slate-800 backdrop-blur-md text-left transition-all">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
+          <h3 id="lightboxTitle" class="text-lg font-bold text-white"></h3>
+          
+          <!-- External Link Button in Modal -->
+          <div id="lightboxLinkContainer" class="hidden">
+            <button id="lightboxExternalBtn" onclick="handleLightboxLinkClick()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white text-xs font-semibold shadow-md transition">
+              <span>Visit Link</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <p id="lightboxDescription" class="text-sm text-slate-300 leading-relaxed max-h-20 overflow-y-auto pr-2"></p>
       </div>
 
     </div>
@@ -829,7 +885,7 @@
       </div>
       <h3 class="text-lg font-bold text-white mb-2">Delete Photograph?</h3>
       <p class="text-xs text-slate-400 mb-6">
-        This action cannot be undone. This photograph will be permanently removed from the gallery.
+        This action cannot be undone. This photograph will be permanently removed from the gallery and stored links.
       </p>
       <div class="flex items-center justify-center gap-3">
         <button onclick="closeDeleteModal()" class="px-5 py-2 rounded-xl border border-slate-700 text-sm font-medium text-slate-300 hover:bg-slate-800 transition">
@@ -852,7 +908,7 @@
       </div>
       <h3 class="text-lg font-bold text-white mb-2">Clear Activity History?</h3>
       <p class="text-xs text-slate-400 mb-6">
-        All tracked visitor interactions, logins, and audit logs will be permanently wiped from localStorage.
+        All tracked visitor interactions, external link clicks, and audit logs will be permanently wiped from localStorage.
       </p>
       <div class="flex items-center justify-center gap-3">
         <button onclick="closeClearLogsModal()" class="px-5 py-2 rounded-xl border border-slate-700 text-sm font-medium text-slate-300 hover:bg-slate-800 transition">
@@ -871,7 +927,7 @@
   <!-- ================= JAVASCRIPT APPLICATION LOGIC ================= -->
   <script>
     /**
-     * LUMINA PHOTO GALLERY - FULL AUDIT & ADMIN PORTAL
+     * LUMINA PHOTO GALLERY - EXTERNAL LINKS & AUDIT SYSTEM
      * Pure Vanilla JavaScript + LocalStorage Persistence
      */
 
@@ -884,22 +940,22 @@
     };
 
     const STORAGE_KEYS = {
-      PHOTOS: 'lumina_poto_photos_v3',
-      USERS: 'lumina_poto_users_v3',
-      SESSION: 'lumina_poto_session_v3',
-      LOGS: 'lumina_poto_activity_logs_v3'
+      PHOTOS: 'lumina_poto_photos_v4',
+      USERS: 'lumina_poto_users_v4',
+      SESSION: 'lumina_poto_session_v4',
+      LOGS: 'lumina_poto_activity_logs_v4'
     };
 
     // --- APPLICATION STATE ---
     let currentSession = null;      // null OR { role: 'admin'|'user', username, name, email }
-    let photosList = [];            // Array of { id, title, description, imageUrl, createdAt, updatedAt }
+    let photosList = [];            // Array of { id, title, description, imageUrl, linkUrl, createdAt, updatedAt }
     let registeredUsers = [];       // Array of { id, username, email, password, name, createdAt }
     let activityLogs = [];          // Array of { id, timestamp, type, actor, role, description, meta }
     
     // View state
     let activeView = 'gallery';     // 'gallery' | 'admin'
     let activeAdminSubTab = 'photos'; // 'photos' | 'history'
-    let currentLogFilter = 'all';    // 'all' | 'photo_view' | 'auth' | 'admin'
+    let currentLogFilter = 'all';    // 'all' | 'link_click' | 'photo_view' | 'auth' | 'admin'
     let currentLightboxIndex = 0;
     let filteredGalleryPhotos = [];
     let pendingUploadImageBase64 = null;
@@ -913,8 +969,7 @@
       navigateTo('gallery');
       setupKeyboardNavigation();
 
-      // Log initial page visit
-      logActivity('visit', 'Visitor landed on Lumina Gallery');
+      logActivity('visit', 'Visitor arrived on Lumina Gallery');
     });
 
     /**
@@ -993,7 +1048,7 @@
       return currentSession && currentSession.role === 'admin' && currentSession.username === ADMIN_CONFIG.username;
     }
 
-    // --- VISITOR & USER ACTIVITY LOGGER (ADMIN-ONLY VISIBILITY) ---
+    // --- VISITOR & USER ACTIVITY LOGGER (ADMIN-ONLY ACCESS) ---
     function logActivity(type, description, meta = {}) {
       const actorName = currentSession ? (currentSession.name || currentSession.username) : 'Anonymous Visitor';
       const actorRole = currentSession ? currentSession.role : 'visitor';
@@ -1002,7 +1057,7 @@
       const entry = {
         id: 'act_' + Date.now() + Math.random().toString(36).substr(2, 4),
         timestamp: new Date().toISOString(),
-        type, // 'visit' | 'auth_login' | 'auth_signup' | 'auth_logout' | 'photo_view' | 'search' | 'admin_upload' | 'admin_edit' | 'admin_delete'
+        type, // 'visit' | 'link_click' | 'auth_login' | 'auth_signup' | 'auth_logout' | 'photo_view' | 'search' | 'admin_upload' | 'admin_edit' | 'admin_delete'
         actor: actorName,
         username: actorUsername,
         role: actorRole,
@@ -1011,13 +1066,11 @@
       };
 
       activityLogs.unshift(entry);
-      // Keep up to 600 records to maintain fast storage performance
       if (activityLogs.length > 600) {
         activityLogs = activityLogs.slice(0, 600);
       }
       saveLogsToStorage();
 
-      // Update badge and table if admin is viewing
       const badge = document.getElementById('adminHistoryBadge');
       if (badge) badge.innerText = activityLogs.length;
 
@@ -1195,7 +1248,7 @@
         closeAdminLoginModal();
         navigateTo('admin');
       } else {
-        logActivity('auth_login', `Failed admin login attempt using username: "${uInput}"`);
+        logActivity('auth_login', `Failed admin login attempt with username: "${uInput}"`);
         showToast("Invalid admin credentials. Please try again.", "error");
       }
     }
@@ -1251,7 +1304,7 @@
         return;
       }
 
-      // Allow admin credentials here too for convenience
+      // Allow admin credentials here too
       if (identifier === ADMIN_CONFIG.username && password === ADMIN_CONFIG.password) {
         saveSessionToStorage({
           role: 'admin',
@@ -1265,7 +1318,6 @@
         return;
       }
 
-      // Check registered users
       const foundUser = registeredUsers.find(u => 
         (u.username.toLowerCase() === identifier.toLowerCase() || u.email.toLowerCase() === identifier.toLowerCase()) &&
         u.password === password
@@ -1290,10 +1342,10 @@
 
     function handleUserSignUp(e) {
       e.preventDefault();
-      const name = document.getElementById('signUpName') ? document.getElementById('signUpName').value.trim() : document.getElementById('userSignUpName').value.trim();
-      const username = document.getElementById('signUpUsername') ? document.getElementById('signUpUsername').value.trim() : document.getElementById('userSignUpUsername').value.trim();
-      const email = (document.getElementById('signUpEmail') ? document.getElementById('signUpEmail').value : document.getElementById('userSignUpEmail').value).trim().toLowerCase();
-      const password = document.getElementById('signUpPassword') ? document.getElementById('signUpPassword').value : document.getElementById('userSignUpPassword').value;
+      const name = document.getElementById('userSignUpName').value.trim();
+      const username = document.getElementById('userSignUpUsername').value.trim();
+      const email = document.getElementById('userSignUpEmail').value.trim().toLowerCase();
+      const password = document.getElementById('userSignUpPassword').value;
 
       if (!name || !username || !email || !password) {
         showToast("Please fill in all registration fields.", "error");
@@ -1348,6 +1400,36 @@
       navigateTo('gallery');
     }
 
+    // --- EXTERNAL LINK CLICK HANDLER ---
+    function handleExternalLinkClick(photoId, event) {
+      if (event) event.stopPropagation();
+      const photo = photosList.find(p => p.id === photoId);
+      if (!photo || !photo.linkUrl) return;
+
+      // Log link click in visitor history
+      logActivity('link_click', `Visitor opened external link for "${photo.title}": ${photo.linkUrl}`, {
+        photoId: photo.id,
+        title: photo.title,
+        linkUrl: photo.linkUrl
+      });
+
+      // Open link in new tab safely
+      window.open(photo.linkUrl, '_blank', 'noopener,noreferrer');
+    }
+
+    function handleLightboxLinkClick() {
+      const photo = filteredGalleryPhotos[currentLightboxIndex];
+      if (!photo || !photo.linkUrl) return;
+
+      logActivity('link_click', `Visitor clicked external link from lightbox for "${photo.title}": ${photo.linkUrl}`, {
+        photoId: photo.id,
+        title: photo.title,
+        linkUrl: photo.linkUrl
+      });
+
+      window.open(photo.linkUrl, '_blank', 'noopener,noreferrer');
+    }
+
     // --- PUBLIC GALLERY RENDERING ---
     function renderGallery() {
       const grid = document.getElementById('galleryGrid');
@@ -1360,7 +1442,8 @@
       filteredGalleryPhotos = photosList.filter(p => {
         if (!searchVal) return true;
         return (p.title && p.title.toLowerCase().includes(searchVal)) || 
-               (p.description && p.description.toLowerCase().includes(searchVal));
+               (p.description && p.description.toLowerCase().includes(searchVal)) ||
+               (p.linkUrl && p.linkUrl.toLowerCase().includes(searchVal));
       });
 
       // Default state: strictly empty
@@ -1385,10 +1468,12 @@
       }
 
       grid.innerHTML = filteredGalleryPhotos.map((photo, index) => {
+        const hasLink = Boolean(photo.linkUrl && photo.linkUrl.trim() !== '');
+
         return `
           <div 
             onclick="openLightbox(${index})" 
-            class="group cursor-pointer rounded-2xl overflow-hidden glass-card hover:border-brand-500/50 transition-all duration-300 transform hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand-500/10 flex flex-col"
+            class="group cursor-pointer rounded-2xl overflow-hidden glass-card hover:border-brand-500/50 transition-all duration-300 transform hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand-500/10 flex flex-col relative"
           >
             <!-- Image Frame -->
             <div class="relative aspect-4/3 w-full bg-slate-900 overflow-hidden">
@@ -1399,13 +1484,27 @@
                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'400\\' height=\\'300\\' viewBox=\\'0 0 400 300\\'%3E%3Crect fill=\\'%231e293b\\' width=\\'400\\' height=\\'300\\'/%3E%3Ctext fill=\\'%2394a3b8\\' font-family=\\'sans-serif\\' font-size=\\'14\\' x=\\'50%25\\' y=\\'50%25\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\'%3EImage Not Found%3C/text%3E%3C/svg%3E';"
               >
+              
+              <!-- Badges on top of image -->
+              <div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                ${hasLink ? `
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md text-[11px] font-semibold text-brand-300 border border-brand-500/30 shadow-lg">
+                    <svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                    External Link
+                  </span>
+                ` : '<span></span>'}
+              </div>
+
+              <!-- Hover View Details Overlay -->
               <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-semibold">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                   </svg>
-                  View Details
+                  Preview Details
                 </span>
               </div>
             </div>
@@ -1421,14 +1520,30 @@
                 </p>
               </div>
 
-              <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-500">
-                <span class="flex items-center gap-1">
+              <!-- Card Action Bar: External Link & Date -->
+              <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] gap-2">
+                <span class="flex items-center gap-1 text-slate-500 whitespace-nowrap">
                   <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                   </svg>
                   ${formatDate(photo.createdAt)}
                 </span>
-                <span class="text-slate-400 font-medium">By Admin</span>
+
+                ${hasLink ? `
+                  <button 
+                    type="button"
+                    onclick="handleExternalLinkClick('${photo.id}', event)" 
+                    class="inline-flex items-center gap-1 px-3 py-1 rounded-xl bg-brand-600/30 hover:bg-brand-600 text-brand-200 hover:text-white border border-brand-500/40 text-[11px] font-semibold transition shadow-sm z-10"
+                    title="Open external destination in new tab"
+                  >
+                    <span>Visit Link</span>
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                  </button>
+                ` : `
+                  <span class="text-slate-500 text-[11px]">By Admin</span>
+                `}
               </div>
             </div>
           </div>
@@ -1455,7 +1570,6 @@
       updateLightboxDisplay();
 
       const photo = filteredGalleryPhotos[currentLightboxIndex];
-      // Log the photo view event in visitor activity history
       logActivity('photo_view', `Viewed photograph: "${photo.title}"`, { photoId: photo.id, title: photo.title });
 
       const modal = document.getElementById('lightboxModal');
@@ -1488,6 +1602,7 @@
       const counter = document.getElementById('lightboxCounter');
       const dateEl = document.getElementById('lightboxDate');
       const downloadBtn = document.getElementById('lightboxDownloadBtn');
+      const linkContainer = document.getElementById('lightboxLinkContainer');
 
       img.src = photo.imageUrl;
       title.innerText = photo.title;
@@ -1495,6 +1610,13 @@
       counter.innerText = `${currentLightboxIndex + 1} / ${filteredGalleryPhotos.length}`;
       dateEl.innerText = formatDate(photo.createdAt);
       downloadBtn.href = photo.imageUrl;
+
+      // Show/Hide external link button in lightbox
+      if (photo.linkUrl && photo.linkUrl.trim() !== '') {
+        linkContainer.classList.remove('hidden');
+      } else {
+        linkContainer.classList.add('hidden');
+      }
 
       const prevBtn = document.getElementById('lightboxPrevBtn');
       const nextBtn = document.getElementById('lightboxNextBtn');
@@ -1645,6 +1767,7 @@
 
       const title = document.getElementById('uploadTitle').value.trim();
       const description = document.getElementById('uploadDescription').value.trim();
+      const linkUrl = document.getElementById('uploadLinkUrl').value.trim();
 
       if (!title || !description) {
         showToast("Please provide both a title and description.", "error");
@@ -1673,6 +1796,7 @@
         title,
         description,
         imageUrl: finalImageUrl,
+        linkUrl: linkUrl || '',
         uploadedBy: ADMIN_CONFIG.username,
         createdAt: new Date().toISOString()
       };
@@ -1680,7 +1804,7 @@
       photosList.unshift(newPhoto);
       savePhotosToStorage();
 
-      logActivity('admin_upload', `Admin uploaded new photograph: "${newPhoto.title}"`, { photoId: newPhoto.id });
+      logActivity('admin_upload', `Admin uploaded new photo: "${newPhoto.title}" ${linkUrl ? `with link: ${linkUrl}` : '(no link)'}`, { photoId: newPhoto.id, linkUrl });
       showToast("Photograph published successfully to the gallery!", "success");
       resetUploadForm();
       renderAdminDashboard();
@@ -1694,7 +1818,8 @@
       const filtered = photosList.filter(p => {
         if (!searchVal) return true;
         return (p.title && p.title.toLowerCase().includes(searchVal)) || 
-               (p.description && p.description.toLowerCase().includes(searchVal));
+               (p.description && p.description.toLowerCase().includes(searchVal)) ||
+               (p.linkUrl && p.linkUrl.toLowerCase().includes(searchVal));
       });
 
       if (photosList.length === 0) {
@@ -1725,6 +1850,7 @@
               <tr>
                 <th scope="col" class="py-3.5 px-4">Photo</th>
                 <th scope="col" class="py-3.5 px-4">Title & Details</th>
+                <th scope="col" class="py-3.5 px-4 hidden md:table-cell">External Link</th>
                 <th scope="col" class="py-3.5 px-4 hidden sm:table-cell">Date</th>
                 <th scope="col" class="py-3.5 px-4 text-right">Actions</th>
               </tr>
@@ -1743,6 +1869,16 @@
                     <div class="font-bold text-white text-sm line-clamp-1">${escapeHTML(photo.title)}</div>
                     <div class="text-xs text-slate-400 line-clamp-2 mt-0.5">${escapeHTML(photo.description)}</div>
                   </td>
+                  <td class="py-3.5 px-4 text-xs text-slate-400 hidden md:table-cell max-w-xs truncate">
+                    ${photo.linkUrl ? `
+                      <a href="${photo.linkUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-brand-300 hover:text-brand-200 hover:underline">
+                        <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
+                        <span class="truncate max-w-[150px]">${escapeHTML(photo.linkUrl)}</span>
+                      </a>
+                    ` : '<span class="text-slate-600 italic">None</span>'}
+                  </td>
                   <td class="py-3.5 px-4 text-xs text-slate-500 hidden sm:table-cell whitespace-nowrap">
                     ${formatDate(photo.createdAt)}
                   </td>
@@ -1751,7 +1887,7 @@
                       <button 
                         onclick="openEditModal('${photo.id}')" 
                         class="p-2 rounded-xl bg-slate-800 hover:bg-brand-600/30 text-brand-300 border border-slate-700 hover:border-brand-500/40 transition" 
-                        title="Edit Photo"
+                        title="Edit Photo & Link"
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -1776,7 +1912,7 @@
       `;
     }
 
-    // --- EDIT PHOTO MODAL LOGIC ---
+    // --- EDIT PHOTO MODAL LOGIC (UPDATES TITLE, DESCRIPTION, IMAGE, AND LINK URL) ---
     function openEditModal(photoId) {
       if (!isAdmin()) {
         showToast("Administrator privileges required.", "error");
@@ -1789,6 +1925,7 @@
       document.getElementById('editPhotoId').value = photo.id;
       document.getElementById('editPhotoTitle').value = photo.title;
       document.getElementById('editPhotoDescription').value = photo.description;
+      document.getElementById('editPhotoLinkUrl').value = photo.linkUrl || '';
       document.getElementById('editPhotoThumb').src = photo.imageUrl;
       document.getElementById('editPhotoUrl').value = '';
       document.getElementById('editFileInput').value = '';
@@ -1852,6 +1989,7 @@
       const id = document.getElementById('editPhotoId').value;
       const title = document.getElementById('editPhotoTitle').value.trim();
       const description = document.getElementById('editPhotoDescription').value.trim();
+      const linkUrl = document.getElementById('editPhotoLinkUrl').value.trim();
       const newUrl = document.getElementById('editPhotoUrl').value.trim();
 
       const photoIndex = photosList.findIndex(p => p.id === id);
@@ -1863,6 +2001,7 @@
       const oldTitle = photosList[photoIndex].title;
       photosList[photoIndex].title = title;
       photosList[photoIndex].description = description;
+      photosList[photoIndex].linkUrl = linkUrl || '';
       photosList[photoIndex].updatedAt = new Date().toISOString();
 
       if (pendingEditImageBase64) {
@@ -1872,7 +2011,7 @@
       }
 
       savePhotosToStorage();
-      logActivity('admin_edit', `Admin updated photograph: "${title}" (previously "${oldTitle}")`, { photoId: id });
+      logActivity('admin_edit', `Admin updated photo "${title}" ${linkUrl ? `(Link: ${linkUrl})` : '(No link)'}`, { photoId: id, linkUrl });
       showToast("Photo updated successfully!", "success");
       closeEditModal();
       renderAdminDashboard();
@@ -1916,15 +2055,17 @@
       currentLogFilter = filterType;
       
       const btnAll = document.getElementById('logFilterAll');
+      const btnLinks = document.getElementById('logFilterLinks');
       const btnView = document.getElementById('logFilterView');
       const btnAuth = document.getElementById('logFilterAuth');
       const btnAdmin = document.getElementById('logFilterAdmin');
 
-      [btnAll, btnView, btnAuth, btnAdmin].forEach(btn => {
+      [btnAll, btnLinks, btnView, btnAuth, btnAdmin].forEach(btn => {
         btn.className = "px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition";
       });
 
       if (filterType === 'all') btnAll.className = "px-3 py-1.5 rounded-xl bg-brand-600 text-white font-semibold transition";
+      if (filterType === 'link_click') btnLinks.className = "px-3 py-1.5 rounded-xl bg-brand-600 text-white font-semibold transition";
       if (filterType === 'photo_view') btnView.className = "px-3 py-1.5 rounded-xl bg-brand-600 text-white font-semibold transition";
       if (filterType === 'auth') btnAuth.className = "px-3 py-1.5 rounded-xl bg-brand-600 text-white font-semibold transition";
       if (filterType === 'admin') btnAdmin.className = "px-3 py-1.5 rounded-xl bg-brand-600 text-white font-semibold transition";
@@ -1933,7 +2074,6 @@
     }
 
     function renderActivityLogs() {
-      // Security guard: only the logged-in admin can view activity logs!
       if (!isAdmin()) {
         const container = document.getElementById('activityLogsTableContainer');
         if (container) container.innerHTML = '<div class="p-6 text-center text-rose-400">Access Denied.</div>';
@@ -1944,12 +2084,11 @@
       const searchVal = (document.getElementById('logSearchInput').value || '').trim().toLowerCase();
 
       let filtered = activityLogs.filter(log => {
-        // Filter by category
+        if (currentLogFilter === 'link_click' && log.type !== 'link_click') return false;
         if (currentLogFilter === 'photo_view' && log.type !== 'photo_view') return false;
         if (currentLogFilter === 'auth' && !log.type.startsWith('auth_')) return false;
         if (currentLogFilter === 'admin' && !log.type.startsWith('admin_')) return false;
 
-        // Filter by search query
         if (searchVal) {
           const matchDesc = log.description && log.description.toLowerCase().includes(searchVal);
           const matchActor = log.actor && log.actor.toLowerCase().includes(searchVal);
@@ -1996,7 +2135,11 @@
               let badgeIcon = '📌';
               let label = 'Interaction';
 
-              if (log.type === 'photo_view') {
+              if (log.type === 'link_click') {
+                badgeColor = 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30';
+                badgeIcon = '🔗';
+                label = 'External Link Click';
+              } else if (log.type === 'photo_view') {
                 badgeColor = 'bg-cyan-500/10 text-cyan-300 border-cyan-500/30';
                 badgeIcon = '👁️';
                 label = 'Photo View';
