@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lumina Photo Gallery | Admin & External Link Showcase</title>
-  <meta name="description" content="A modern photo gallery web application featuring admin management, external link integration, user authentication, and admin-only visitor history tracking.">
+  <title>Lumina Photo Gallery | Admin Portal & Public Showcase</title>
+  <meta name="description" content="A modern photo gallery web application with instant public photo publishing, external link integration, user authentication, and admin-only visitor history tracking.">
   
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -142,13 +142,13 @@
         <div class="max-w-2xl space-y-3 z-10 relative">
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-300 text-xs font-semibold tracking-wide">
             <span class="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></span>
-            Curated Visual Collection with External Links
+            Public Visual Showcase &bull; Real-Time Live Sync
           </div>
           <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
             Discover Captivating <span class="bg-gradient-to-r from-brand-400 to-indigo-400 bg-clip-text text-transparent">Photography</span>
           </h1>
           <p class="text-slate-400 text-sm sm:text-base leading-relaxed">
-            Browse through photographs curated by the administrator. Click any picture to explore in high-definition, read full narratives, and visit associated external destination links.
+            All photographs uploaded or modified by the administrator are instantly visible here to all visitors and regular users. Click any photo to inspect full narratives or open attached destination links.
           </p>
         </div>
 
@@ -183,7 +183,7 @@
         </div>
       </div>
 
-      <!-- Gallery Grid Container -->
+      <!-- Gallery Grid Container (Live Updated for all users & visitors) -->
       <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         <!-- Rendered dynamically via JavaScript -->
       </div>
@@ -209,7 +209,7 @@
 
     </section>
 
-    <!-- VIEW 2: ADMIN DASHBOARD (Protected: Photo CRUD, External Links, and Visitor History) -->
+    <!-- VIEW 2: ADMIN DASHBOARD (Strictly Protected - Photo Management, Links, and Visitor History) -->
     <section id="viewAdmin" class="hidden space-y-8">
       
       <!-- Admin Header with Stats -->
@@ -222,7 +222,7 @@
             </div>
             <h1 class="text-3xl font-extrabold text-white">Administrator Control Panel</h1>
             <p class="text-slate-400 text-sm mt-1">
-              Upload, edit, link external destinations, and inspect real-time visitor activity history.
+              Upload, edit, attach external destination links, and inspect real-time visitor activity history.
             </p>
           </div>
 
@@ -259,6 +259,14 @@
             Visitor History & Activity Logs
             <span id="adminHistoryBadge" class="text-[10px] bg-brand-500/20 text-brand-300 px-1.5 py-0.2 rounded-full border border-brand-500/30 font-bold">0</span>
           </button>
+
+          <!-- Quick Jump to Public Gallery -->
+          <button onclick="navigateTo('gallery')" class="ml-auto hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-xs font-medium text-slate-300 hover:text-white transition border border-slate-700">
+            <span>View Public Live Gallery</span>
+            <svg class="w-3.5 h-3.5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </button>
         </div>
       </div>
 
@@ -275,7 +283,9 @@
                 </svg>
                 Upload New Photograph
               </h2>
-              <p class="text-xs text-slate-400 mt-0.5">Publish a photograph with title, description, and an optional external link destination.</p>
+              <p class="text-xs text-slate-400 mt-0.5">
+                Published photos immediately become visible to all public visitors in the live gallery grid.
+              </p>
             </div>
           </div>
 
@@ -306,7 +316,7 @@
                         </svg>
                       </div>
                       <div class="text-xs font-medium text-slate-300">Click to browse or drop image here</div>
-                      <div class="text-[11px] text-slate-500">Auto-compressed for local storage</div>
+                      <div class="text-[11px] text-slate-500">Auto-compressed for fast browser storage</div>
                     </div>
                   </div>
                 </div>
@@ -370,7 +380,7 @@
                     ></textarea>
                   </div>
 
-                  <!-- External Link Field (NEW) -->
+                  <!-- External Link Field -->
                   <div>
                     <label for="uploadLinkUrl" class="block text-xs font-semibold text-slate-300 mb-1 flex items-center justify-between">
                       <span class="flex items-center gap-1.5">
@@ -402,7 +412,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    Publish to Gallery
+                    Publish to Public Gallery
                   </button>
                 </div>
 
@@ -537,7 +547,7 @@
         <span>Storage: HTML5 LocalStorage active</span>
       </div>
       <div>
-        Lumina Photo Gallery &bull; External Link Enabled Single-File App
+        Lumina Photo Gallery &bull; Real-Time Public Sync
       </div>
       <div class="flex items-center gap-4">
         <button onclick="handleAdminTabClick()" class="hover:text-slate-300 transition flex items-center gap-1.5">
@@ -723,7 +733,7 @@
           </svg>
           Edit Photograph & Link Details
         </h3>
-        <p class="text-xs text-slate-400 mt-1">Update title, narrative, external link destination, or replace the photo image.</p>
+        <p class="text-xs text-slate-400 mt-1">Changes saved here will immediately update in the public gallery for all users.</p>
       </div>
 
       <form id="editPhotoForm" onsubmit="handleEditPhotoSubmit(event)" class="space-y-4">
@@ -751,7 +761,7 @@
           ></textarea>
         </div>
 
-        <!-- External Link Field (NEW) -->
+        <!-- External Link Field -->
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1 flex items-center justify-between">
             <span class="flex items-center gap-1.5">
@@ -796,7 +806,7 @@
             Cancel
           </button>
           <button type="submit" class="px-6 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 text-sm font-semibold text-white hover:from-brand-500 hover:to-indigo-500 transition shadow-lg shadow-brand-500/20">
-            Save Changes
+            Save & Publish Live
           </button>
         </div>
       </form>
@@ -804,7 +814,7 @@
     </div>
   </div>
 
-  <!-- 4. INTERACTIVE LIGHTBOX MODAL (Public Gallery Viewer with External Link Trigger) -->
+  <!-- 4. INTERACTIVE LIGHTBOX MODAL (Public Gallery Viewer with External Link Action) -->
   <div id="lightboxModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-2 sm:p-6 bg-black/95 modal-backdrop-blur">
     
     <!-- Top Lightbox Toolbar -->
@@ -885,7 +895,7 @@
       </div>
       <h3 class="text-lg font-bold text-white mb-2">Delete Photograph?</h3>
       <p class="text-xs text-slate-400 mb-6">
-        This action cannot be undone. This photograph will be permanently removed from the gallery and stored links.
+        This action cannot be undone. This photograph will be permanently removed from the public gallery and local storage.
       </p>
       <div class="flex items-center justify-center gap-3">
         <button onclick="closeDeleteModal()" class="px-5 py-2 rounded-xl border border-slate-700 text-sm font-medium text-slate-300 hover:bg-slate-800 transition">
@@ -927,8 +937,8 @@
   <!-- ================= JAVASCRIPT APPLICATION LOGIC ================= -->
   <script>
     /**
-     * LUMINA PHOTO GALLERY - EXTERNAL LINKS & AUDIT SYSTEM
-     * Pure Vanilla JavaScript + LocalStorage Persistence
+     * LUMINA PHOTO GALLERY - INSTANT PUBLIC SYNC & EXTERNAL LINKS
+     * Pure Vanilla JavaScript + LocalStorage Persistence + Cross-Tab Live Storage Events
      */
 
     // --- CONFIGURATION & CREDENTIALS ---
@@ -940,10 +950,10 @@
     };
 
     const STORAGE_KEYS = {
-      PHOTOS: 'lumina_poto_photos_v4',
-      USERS: 'lumina_poto_users_v4',
-      SESSION: 'lumina_poto_session_v4',
-      LOGS: 'lumina_poto_activity_logs_v4'
+      PHOTOS: 'lumina_poto_photos_v5',
+      USERS: 'lumina_poto_users_v5',
+      SESSION: 'lumina_poto_session_v5',
+      LOGS: 'lumina_poto_activity_logs_v5'
     };
 
     // --- APPLICATION STATE ---
@@ -970,6 +980,20 @@
       setupKeyboardNavigation();
 
       logActivity('visit', 'Visitor arrived on Lumina Gallery');
+
+      // CRUCIAL REAL-TIME SYNC: Listen for localStorage changes across other browser tabs/windows!
+      // If admin uploads or edits in another tab, public visitors will immediately see it in real-time.
+      window.addEventListener('storage', (event) => {
+        if (event.key === STORAGE_KEYS.PHOTOS) {
+          try {
+            photosList = event.newValue ? JSON.parse(event.newValue) : [];
+            renderGallery();
+            if (activeView === 'admin') renderAdminDashboard();
+          } catch (e) {
+            console.error("Storage sync error:", e);
+          }
+        }
+      });
     });
 
     /**
@@ -1406,14 +1430,12 @@
       const photo = photosList.find(p => p.id === photoId);
       if (!photo || !photo.linkUrl) return;
 
-      // Log link click in visitor history
       logActivity('link_click', `Visitor opened external link for "${photo.title}": ${photo.linkUrl}`, {
         photoId: photo.id,
         title: photo.title,
         linkUrl: photo.linkUrl
       });
 
-      // Open link in new tab safely
       window.open(photo.linkUrl, '_blank', 'noopener,noreferrer');
     }
 
@@ -1430,7 +1452,7 @@
       window.open(photo.linkUrl, '_blank', 'noopener,noreferrer');
     }
 
-    // --- PUBLIC GALLERY RENDERING ---
+    // --- PUBLIC GALLERY RENDERING (CRUCIAL: INSTANTLY REFLECTS ADMIN UPLOADS & EDITS) ---
     function renderGallery() {
       const grid = document.getElementById('galleryGrid');
       const emptyState = document.getElementById('galleryEmptyState');
@@ -1446,7 +1468,7 @@
                (p.linkUrl && p.linkUrl.toLowerCase().includes(searchVal));
       });
 
-      // Default state: strictly empty
+      // Default state: strictly empty if no photos
       if (photosList.length === 0) {
         grid.innerHTML = '';
         emptyState.classList.remove('hidden');
@@ -1485,10 +1507,10 @@
                 onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'400\\' height=\\'300\\' viewBox=\\'0 0 400 300\\'%3E%3Crect fill=\\'%231e293b\\' width=\\'400\\' height=\\'300\\'/%3E%3Ctext fill=\\'%2394a3b8\\' font-family=\\'sans-serif\\' font-size=\\'14\\' x=\\'50%25\\' y=\\'50%25\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\'%3EImage Not Found%3C/text%3E%3C/svg%3E';"
               >
               
-              <!-- Badges on top of image -->
+              <!-- External Link Indicator Badge on Image -->
               <div class="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
                 ${hasLink ? `
-                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md text-[11px] font-semibold text-brand-300 border border-brand-500/30 shadow-lg">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md text-[11px] font-semibold text-brand-300 border border-brand-500/30 shadow-lg">
                     <svg class="w-3 h-3 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                     </svg>
@@ -1520,7 +1542,7 @@
                 </p>
               </div>
 
-              <!-- Card Action Bar: External Link & Date -->
+              <!-- Card Action Bar: Clickable External Link & Date -->
               <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] gap-2">
                 <span class="flex items-center gap-1 text-slate-500 whitespace-nowrap">
                   <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1534,7 +1556,7 @@
                     type="button"
                     onclick="handleExternalLinkClick('${photo.id}', event)" 
                     class="inline-flex items-center gap-1 px-3 py-1 rounded-xl bg-brand-600/30 hover:bg-brand-600 text-brand-200 hover:text-white border border-brand-500/40 text-[11px] font-semibold transition shadow-sm z-10"
-                    title="Open external destination in new tab"
+                    title="Open external link in new tab"
                   >
                     <span>Visit Link</span>
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1611,7 +1633,6 @@
       dateEl.innerText = formatDate(photo.createdAt);
       downloadBtn.href = photo.imageUrl;
 
-      // Show/Hide external link button in lightbox
       if (photo.linkUrl && photo.linkUrl.trim() !== '') {
         linkContainer.classList.remove('hidden');
       } else {
@@ -1758,6 +1779,7 @@
       clearUploadPreview();
     }
 
+    // --- UPLOAD PHOTO: INSTANTLY MAKES PHOTO VISIBLE IN PUBLIC GALLERY ---
     async function handlePhotoUpload(e) {
       e.preventDefault();
       if (!isAdmin()) {
@@ -1801,13 +1823,18 @@
         createdAt: new Date().toISOString()
       };
 
+      // Add to beginning of photos list
       photosList.unshift(newPhoto);
+      // Persist to localStorage
       savePhotosToStorage();
 
-      logActivity('admin_upload', `Admin uploaded new photo: "${newPhoto.title}" ${linkUrl ? `with link: ${linkUrl}` : '(no link)'}`, { photoId: newPhoto.id, linkUrl });
-      showToast("Photograph published successfully to the gallery!", "success");
-      resetUploadForm();
+      // CRUCIAL RULE: Instantly update public gallery grid!
+      renderGallery();
       renderAdminDashboard();
+
+      logActivity('admin_upload', `Admin uploaded new photo: "${newPhoto.title}" ${linkUrl ? `with link: ${linkUrl}` : '(no link)'}`, { photoId: newPhoto.id, linkUrl });
+      showToast("Photograph published! It is now instantly live in the public gallery.", "success");
+      resetUploadForm();
     }
 
     // --- ADMIN PHOTOS MANAGEMENT (LIST, EDIT, DELETE) ---
@@ -1912,7 +1939,7 @@
       `;
     }
 
-    // --- EDIT PHOTO MODAL LOGIC (UPDATES TITLE, DESCRIPTION, IMAGE, AND LINK URL) ---
+    // --- EDIT PHOTO MODAL LOGIC (INSTANTLY UPDATES PUBLIC GALLERY) ---
     function openEditModal(photoId) {
       if (!isAdmin()) {
         showToast("Administrator privileges required.", "error");
@@ -2010,11 +2037,16 @@
         photosList[photoIndex].imageUrl = newUrl;
       }
 
+      // Persist to localStorage
       savePhotosToStorage();
-      logActivity('admin_edit', `Admin updated photo "${title}" ${linkUrl ? `(Link: ${linkUrl})` : '(No link)'}`, { photoId: id, linkUrl });
-      showToast("Photo updated successfully!", "success");
-      closeEditModal();
+
+      // CRUCIAL RULE: Instantly update public gallery grid!
+      renderGallery();
       renderAdminDashboard();
+
+      logActivity('admin_edit', `Admin updated photo "${title}" ${linkUrl ? `(Link: ${linkUrl})` : '(No link)'}`, { photoId: id, linkUrl });
+      showToast("Photo updated! Changes are live in the public gallery.", "success");
+      closeEditModal();
     }
 
     // --- DELETE PHOTO CONFIRMATION ---
@@ -2043,11 +2075,15 @@
 
       photosList = photosList.filter(p => p.id !== pendingDeletePhotoId);
       savePhotosToStorage();
+
+      // Instantly update public gallery
+      renderGallery();
+      renderAdminDashboard();
+
       logActivity('admin_delete', `Admin permanently deleted photograph: "${title}"`, { photoId: pendingDeletePhotoId });
 
       showToast("Photo was successfully deleted.", "info");
       closeDeleteModal();
-      renderAdminDashboard();
     }
 
     // --- ADMIN VISITOR ACTIVITY LOGS VIEW & CONTROLS ---
