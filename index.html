@@ -1,0 +1,2169 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumina Photo Gallery | Admin & Visitor Activity Portal</title>
+  <meta name="description" content="A modern, responsive photo gallery with admin management, user authentication, and admin-only visitor activity logging.">
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS via Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .glass-nav {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-modal {
+      background: rgba(15, 23, 42, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .modal-backdrop-blur {
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+
+  <!-- Ambient Glow Effects -->
+  <div class="fixed top-0 left-1/4 -z-10 w-96 h-96 bg-brand-600/15 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="fixed bottom-0 right-1/4 -z-10 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+  <!-- ================= TOP NAVIGATION ================= -->
+  <header class="sticky top-0 z-40 glass-nav transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#gallery" onclick="navigateTo('gallery')" class="flex items-center gap-3 group focus:outline-none">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-brand-500/25 group-hover:scale-105 transition-transform duration-200">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        <div>
+          <span class="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-brand-300 bg-clip-text text-transparent">Lumina</span>
+          <span class="text-xs uppercase tracking-widest text-slate-400 block -mt-1 font-semibold">Gallery</span>
+        </div>
+      </a>
+
+      <!-- Center Navigation Tabs -->
+      <nav class="hidden md:flex items-center space-x-1 p-1 bg-slate-900/80 rounded-xl border border-slate-800">
+        <button id="navTabGallery" onclick="navigateTo('gallery')" class="px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 text-white bg-slate-800 shadow-sm flex items-center gap-2">
+          <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+          </svg>
+          Public Gallery
+        </button>
+        <button id="navTabAdmin" onclick="handleAdminTabClick()" class="px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 text-slate-400 hover:text-slate-200 flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+          </svg>
+          Admin Panel
+          <span id="navAdminBadge" class="hidden text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Admin Active</span>
+        </button>
+      </nav>
+
+      <!-- Right User Controls -->
+      <div id="authHeaderContainer" class="flex items-center gap-3">
+        <!-- Rendered via renderNavAuth() -->
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTAINER ================= -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- VIEW 1: PUBLIC GALLERY -->
+    <section id="viewGallery" class="space-y-8">
+      
+      <!-- Hero / Gallery Header -->
+      <div class="relative overflow-hidden rounded-3xl glass-card p-6 sm:p-10 border border-slate-800/80">
+        <div class="max-w-2xl space-y-3 z-10 relative">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-300 text-xs font-semibold tracking-wide">
+            <span class="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></span>
+            Curated Visual Collection
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+            Discover Captivating <span class="bg-gradient-to-r from-brand-400 to-indigo-400 bg-clip-text text-transparent">Photography</span>
+          </h1>
+          <p class="text-slate-400 text-sm sm:text-base leading-relaxed">
+            Browse through photographs uploaded by the administrator. Click any picture to explore in high-definition with complete narratives.
+          </p>
+        </div>
+
+        <div class="mt-6 flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-slate-800/80 z-10 relative">
+          <!-- Live Photo Counter -->
+          <div class="flex items-center gap-2 text-sm text-slate-400">
+            <span class="font-semibold text-white" id="galleryPhotoCount">0</span>
+            <span>photographs in collection</span>
+          </div>
+
+          <!-- Gallery Search & Refresh -->
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <div class="relative flex-grow sm:w-64">
+              <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              <input 
+                type="text" 
+                id="gallerySearchInput" 
+                oninput="handleGallerySearch()" 
+                placeholder="Search by title or description..." 
+                class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl pl-9 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
+              >
+            </div>
+            
+            <button onclick="renderGallery()" title="Refresh gallery" class="p-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-400 hover:text-white hover:border-slate-600 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gallery Grid Container -->
+      <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Rendered dynamically via JavaScript -->
+      </div>
+
+      <!-- Empty State for Gallery (Starts completely empty by default) -->
+      <div id="galleryEmptyState" class="hidden py-16 px-4 text-center rounded-3xl border border-dashed border-slate-800 bg-slate-900/30">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-slate-800/80 border border-slate-700 flex items-center justify-center text-slate-400">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-1">Gallery is Empty</h3>
+        <p class="text-slate-400 text-sm max-w-md mx-auto mb-6">
+          No photographs have been published yet. Log in to the administrator portal to upload and showcase your photos.
+        </p>
+        <button onclick="openAdminLoginModal()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 text-white font-medium text-sm hover:from-brand-500 hover:to-indigo-500 transition shadow-lg shadow-brand-500/20">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+          </svg>
+          Admin Portal Login
+        </button>
+      </div>
+
+    </section>
+
+    <!-- VIEW 2: ADMIN DASHBOARD (Strictly protected - Photo CRUD + Visitor History Logs) -->
+    <section id="viewAdmin" class="hidden space-y-8">
+      
+      <!-- Admin Header with Stats -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-800">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-semibold tracking-wide mb-3">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              Admin Authorization Active &bull; chathumal
+            </div>
+            <h1 class="text-3xl font-extrabold text-white">Administrator Control Panel</h1>
+            <p class="text-slate-400 text-sm mt-1">
+              Full privileges: manage photos, upload new media, and inspect real-time visitor and user activity logs.
+            </p>
+          </div>
+
+          <!-- Quick Stats Group -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div class="bg-slate-900/90 p-3.5 rounded-2xl border border-slate-800 text-center">
+              <div class="text-xl font-bold text-white" id="adminTotalPhotos">0</div>
+              <div class="text-[11px] text-slate-400 font-medium">Published Photos</div>
+            </div>
+            <div class="bg-slate-900/90 p-3.5 rounded-2xl border border-slate-800 text-center">
+              <div class="text-xl font-bold text-brand-400" id="adminTotalLogsCount">0</div>
+              <div class="text-[11px] text-slate-400 font-medium">Tracked Events</div>
+            </div>
+            <div class="bg-slate-900/90 p-3.5 rounded-2xl border border-slate-800 text-center col-span-2 sm:col-span-1">
+              <div class="text-xl font-bold text-emerald-400" id="adminRegisteredUsersCount">0</div>
+              <div class="text-[11px] text-slate-400 font-medium">Registered Users</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Sub-navigation Tabs (Photos Management vs Visitor Activity History) -->
+        <div class="flex items-center gap-2 mt-6 pt-6 border-t border-slate-800/80">
+          <button id="adminSubTabPhotos" onclick="switchAdminSubTab('photos')" class="px-4 py-2 rounded-xl text-xs font-semibold transition bg-brand-600 text-white flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            Photo Management & Upload
+          </button>
+          
+          <button id="adminSubTabHistory" onclick="switchAdminSubTab('history')" class="px-4 py-2 rounded-xl text-xs font-semibold transition text-slate-400 hover:text-white hover:bg-slate-800 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            Visitor History & Activity Logs
+            <span id="adminHistoryBadge" class="text-[10px] bg-brand-500/20 text-brand-300 px-1.5 py-0.2 rounded-full border border-brand-500/30 font-bold">0</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= SUB-PANEL A: PHOTO MANAGEMENT ================= -->
+      <div id="adminPanelPhotos" class="space-y-8">
+        
+        <!-- Upload New Photo Form -->
+        <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-800">
+          <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+            <div>
+              <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+                Upload New Photograph
+              </h2>
+              <p class="text-xs text-slate-400 mt-0.5">Publish a photograph via local file upload or direct web URL.</p>
+            </div>
+          </div>
+
+          <form id="uploadPhotoForm" onsubmit="handlePhotoUpload(event)" class="space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              
+              <!-- Left: Source Selection & Preview (5 cols) -->
+              <div class="lg:col-span-5 space-y-4">
+                <!-- Switch Source Method -->
+                <div class="flex rounded-xl bg-slate-900 p-1 border border-slate-800">
+                  <button type="button" id="tabUploadFile" onclick="setUploadSourceMethod('file')" class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-brand-600 text-white transition">
+                    Local File Picker
+                  </button>
+                  <button type="button" id="tabUploadUrl" onclick="setUploadSourceMethod('url')" class="flex-1 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition">
+                    Image Web URL
+                  </button>
+                </div>
+
+                <!-- Input Area: File Picker -->
+                <div id="uploadFileArea" class="space-y-2">
+                  <label class="block text-xs font-semibold text-slate-300">Choose Image File</label>
+                  <div class="relative border-2 border-dashed border-slate-700 hover:border-brand-500 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-slate-900/50 group" onclick="document.getElementById('uploadFileInput').click()">
+                    <input type="file" id="uploadFileInput" accept="image/*" class="hidden" onchange="handleFileSelected(event)">
+                    <div class="space-y-2 pointer-events-none">
+                      <div class="w-12 h-12 mx-auto rounded-xl bg-slate-800 group-hover:bg-brand-600/20 text-slate-400 group-hover:text-brand-400 flex items-center justify-center transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                      </div>
+                      <div class="text-xs font-medium text-slate-300">Click to browse or drop image here</div>
+                      <div class="text-[11px] text-slate-500">Auto-compressed for local storage</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Input Area: Image URL -->
+                <div id="uploadUrlArea" class="hidden space-y-2">
+                  <label for="uploadUrlInput" class="block text-xs font-semibold text-slate-300">Image Web URL</label>
+                  <div class="flex gap-2">
+                    <input 
+                      type="url" 
+                      id="uploadUrlInput" 
+                      placeholder="https://images.unsplash.com/..." 
+                      class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500"
+                      oninput="handleUrlInputPreview()"
+                    >
+                    <button type="button" onclick="handleUrlInputPreview()" class="px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl text-xs text-slate-300 hover:text-white transition">
+                      Test
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Image Live Preview -->
+                <div id="uploadPreviewContainer" class="hidden rounded-2xl overflow-hidden border border-slate-700 bg-slate-900 relative aspect-video flex items-center justify-center">
+                  <img id="uploadPreviewImg" src="" alt="Preview" class="w-full h-full object-cover">
+                  <button type="button" onclick="clearUploadPreview()" title="Remove image" class="absolute top-2 right-2 p-1.5 rounded-lg bg-black/70 text-white hover:bg-rose-600 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Right: Title, Description & Action (7 cols) -->
+              <div class="lg:col-span-7 space-y-4 flex flex-col justify-between">
+                <div class="space-y-4">
+                  <!-- Title Field -->
+                  <div>
+                    <label for="uploadTitle" class="block text-xs font-semibold text-slate-300 mb-1">
+                      Photo Title <span class="text-rose-400">*</span>
+                    </label>
+                    <input 
+                      type="text" 
+                      id="uploadTitle" 
+                      required 
+                      placeholder="e.g. Alpine Glacier at Sunrise" 
+                      class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+                    >
+                  </div>
+
+                  <!-- Description Field -->
+                  <div>
+                    <label for="uploadDescription" class="block text-xs font-semibold text-slate-300 mb-1">
+                      Photo Description <span class="text-rose-400">*</span>
+                    </label>
+                    <textarea 
+                      id="uploadDescription" 
+                      rows="5" 
+                      required 
+                      placeholder="Provide details, narrative, location, or technical capture information..." 
+                      class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+                    ></textarea>
+                  </div>
+                </div>
+
+                <!-- Form Buttons -->
+                <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+                  <button type="button" onclick="resetUploadForm()" class="px-5 py-2.5 rounded-xl border border-slate-700 text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition">
+                    Clear
+                  </button>
+                  <button type="submit" id="btnPublishPhoto" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 text-sm font-semibold text-white hover:from-brand-500 hover:to-indigo-500 transition shadow-lg shadow-brand-500/25">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Publish to Gallery
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+          </form>
+        </div>
+
+        <!-- Manage Existing Photos Section -->
+        <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-800">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
+            <div>
+              <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
+                Manage & Edit Uploaded Photos
+              </h2>
+              <p class="text-xs text-slate-400 mt-0.5">Use the Edit button to modify titles, descriptions, or images, or delete entries.</p>
+            </div>
+
+            <!-- Quick Filter in Admin -->
+            <div class="w-full sm:w-64">
+              <input 
+                type="text" 
+                id="adminSearchInput" 
+                oninput="renderAdminPhotosList()" 
+                placeholder="Filter photos..." 
+                class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              >
+            </div>
+          </div>
+
+          <!-- Admin Table Container -->
+          <div id="adminPhotosContainer">
+            <!-- Rendered dynamically via renderAdminPhotosList() -->
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ================= SUB-PANEL B: VISITOR HISTORY & ACTIVITY LOGS (ADMIN ONLY) ================= -->
+      <div id="adminPanelHistory" class="hidden space-y-6">
+        
+        <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-800">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
+            <div>
+              <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold mb-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+                Restricted Admin Audit Log
+              </div>
+              <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                Visitor & User Activity Logs
+              </h2>
+              <p class="text-xs text-slate-400 mt-0.5">
+                Audit trail recording visitor interactions, user registrations, logins, searches, and photo viewings. Only accessible to you.
+              </p>
+            </div>
+
+            <!-- Log Actions -->
+            <div class="flex items-center gap-3">
+              <button onclick="exportLogsAsJSON()" class="px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                Export JSON
+              </button>
+              <button onclick="promptClearLogs()" class="px-3.5 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs font-semibold text-rose-300 hover:bg-rose-500/20 transition flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+                Clear History
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter & Search Controls -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-6">
+            <!-- Filter Pills -->
+            <div class="flex flex-wrap items-center gap-1.5 text-xs">
+              <button onclick="filterLogs('all')" id="logFilterAll" class="px-3 py-1.5 rounded-xl bg-brand-600 text-white font-semibold transition">
+                All Activities
+              </button>
+              <button onclick="filterLogs('photo_view')" id="logFilterView" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition">
+                Photo Views
+              </button>
+              <button onclick="filterLogs('auth')" id="logFilterAuth" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition">
+                User Sign-Ins & Sign-Ups
+              </button>
+              <button onclick="filterLogs('admin')" id="logFilterAdmin" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition">
+                Admin CRUD Actions
+              </button>
+            </div>
+
+            <!-- Search input -->
+            <div class="w-full sm:w-64">
+              <input 
+                type="text" 
+                id="logSearchInput" 
+                oninput="renderActivityLogs()" 
+                placeholder="Search activity records..." 
+                class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500"
+              >
+            </div>
+          </div>
+
+          <!-- Logs Timeline / Table Container -->
+          <div id="activityLogsTableContainer" class="overflow-x-auto rounded-2xl border border-slate-800">
+            <!-- Rendered dynamically via renderActivityLogs() -->
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="glass-nav border-t border-slate-800/80 mt-auto py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span>Storage: HTML5 LocalStorage active</span>
+      </div>
+      <div>
+        Lumina Photo Gallery &bull; Secure Single-File App
+      </div>
+      <div class="flex items-center gap-4">
+        <button onclick="handleAdminTabClick()" class="hover:text-slate-300 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+          </svg>
+          Admin Portal
+        </button>
+        <button onclick="openUserAuthModal('signin')" class="hover:text-slate-300 transition">User Login</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- 1. REGULAR USER AUTH MODAL (Visitors Sign In & Sign Up) -->
+  <div id="userAuthModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 modal-backdrop-blur">
+    <div class="relative w-full max-w-md glass-modal rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-700/80 transition-all scale-95 opacity-0 duration-200" id="userAuthModalContent">
+      
+      <!-- Close Button -->
+      <button onclick="closeUserAuthModal()" class="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+
+      <!-- Tabs -->
+      <div class="flex rounded-xl bg-slate-900 p-1 border border-slate-800 mb-6">
+        <button id="userAuthTabSignIn" onclick="switchUserAuthTab('signin')" class="flex-1 py-2 text-xs font-semibold rounded-lg bg-brand-600 text-white transition">
+          User Sign In
+        </button>
+        <button id="userAuthTabSignUp" onclick="switchUserAuthTab('signup')" class="flex-1 py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition">
+          Create Account
+        </button>
+      </div>
+
+      <!-- Visitor Sign In Form -->
+      <form id="userSignInForm" onsubmit="handleUserSignIn(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Username or Email</label>
+          <input 
+            type="text" 
+            id="userSignInUsername" 
+            required 
+            placeholder="Your username or email" 
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500"
+          >
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Password</label>
+          <input 
+            type="password" 
+            id="userSignInPassword" 
+            required 
+            placeholder="••••••••" 
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500"
+          >
+        </div>
+
+        <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 text-sm font-semibold text-white hover:from-brand-500 hover:to-indigo-500 transition shadow-lg shadow-brand-500/20">
+          Sign In
+        </button>
+      </form>
+
+      <!-- Visitor Sign Up Form -->
+      <form id="userSignUpForm" onsubmit="handleUserSignUp(event)" class="hidden space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Full Name</label>
+          <input 
+            type="text" 
+            id="userSignUpName" 
+            required 
+            placeholder="Jane Doe" 
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500"
+          >
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Username</label>
+          <input 
+            type="text" 
+            id="userSignUpUsername" 
+            required 
+            placeholder="janedoe" 
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500"
+          >
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
+          <input 
+            type="email" 
+            id="userSignUpEmail" 
+            required 
+            placeholder="jane@example.com" 
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500"
+          >
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Password</label>
+          <input 
+            type="password" 
+            id="userSignUpPassword" 
+            required 
+            minlength="4" 
+            placeholder="Choose password" 
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500"
+          >
+        </div>
+
+        <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 text-sm font-semibold text-white hover:from-brand-500 hover:to-indigo-500 transition shadow-lg shadow-brand-500/20">
+          Register New Account
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- 2. ADMIN LOGIN MODAL (Validates Admin Credentials) -->
+  <div id="adminLoginModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 modal-backdrop-blur">
+    <div class="relative w-full max-w-md glass-modal rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-700/80 transition-all scale-95 opacity-0 duration-200" id="adminLoginModalContent">
+      
+      <!-- Close Button -->
+      <button onclick="closeAdminLoginModal()" class="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+
+      <div class="text-center mb-6">
+        <div class="w-12 h-12 mx-auto mb-3 rounded-2xl bg-brand-600/20 border border-brand-500/30 flex items-center justify-center text-brand-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-white">Administrator Portal</h3>
+        <p class="text-xs text-slate-400 mt-1">Enter your admin credentials to access management controls & visitor history.</p>
+      </div>
+
+      <form id="adminLoginForm" onsubmit="handleAdminLoginSubmit(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Admin Username</label>
+          <input 
+            type="text" 
+            id="adminInputUsername" 
+            required 
+            placeholder="Username" 
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500"
+          >
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Admin Password</label>
+          <input 
+            type="password" 
+            id="adminInputPassword" 
+            required 
+            placeholder="••••••••" 
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500"
+          >
+        </div>
+
+        <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 text-sm font-semibold text-white hover:from-brand-500 hover:to-indigo-500 transition shadow-lg shadow-brand-500/20">
+          Verify & Access Dashboard
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- 3. EDIT PHOTO MODAL (Admin Only) -->
+  <div id="editPhotoModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 modal-backdrop-blur">
+    <div class="relative w-full max-w-xl glass-modal rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-700/80 transition-all scale-95 opacity-0 duration-200" id="editModalContent">
+      
+      <!-- Close Button -->
+      <button onclick="closeEditModal()" class="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+
+      <div class="mb-6">
+        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+          <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+          </svg>
+          Edit Photo Details
+        </h3>
+        <p class="text-xs text-slate-400 mt-1">Update title, narrative, or replace the photo image.</p>
+      </div>
+
+      <form id="editPhotoForm" onsubmit="handleEditPhotoSubmit(event)" class="space-y-4">
+        <input type="hidden" id="editPhotoId">
+
+        <!-- Title -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Photo Title</label>
+          <input 
+            type="text" 
+            id="editPhotoTitle" 
+            required 
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500"
+          >
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Photo Description</label>
+          <textarea 
+            id="editPhotoDescription" 
+            rows="4" 
+            required 
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500"
+          ></textarea>
+        </div>
+
+        <!-- Current / Replace Image Option -->
+        <div class="space-y-2 pt-2 border-t border-slate-800">
+          <label class="block text-xs font-semibold text-slate-300">Replace Image (Optional)</label>
+          <div class="flex items-center gap-4">
+            <img id="editPhotoThumb" src="" alt="Thumbnail" class="w-16 h-16 rounded-xl object-cover border border-slate-700 bg-slate-900">
+            <div class="flex-grow space-y-2">
+              <input 
+                type="text" 
+                id="editPhotoUrl" 
+                placeholder="Paste new Image URL (or leave blank to keep)" 
+                class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500"
+                onchange="handleEditUrlChange(this.value)"
+              >
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] text-slate-500">or upload new file:</span>
+                <input type="file" id="editFileInput" accept="image/*" class="text-xs text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:bg-slate-800 file:text-slate-300 hover:file:bg-slate-700" onchange="handleEditFileSelected(event)">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-6 border-t border-slate-800">
+          <button type="button" onclick="closeEditModal()" class="px-5 py-2 rounded-xl border border-slate-700 text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition">
+            Cancel
+          </button>
+          <button type="submit" class="px-6 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 text-sm font-semibold text-white hover:from-brand-500 hover:to-indigo-500 transition shadow-lg shadow-brand-500/20">
+            Save Changes
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- 4. INTERACTIVE LIGHTBOX MODAL (Public Gallery Viewer) -->
+  <div id="lightboxModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-2 sm:p-6 bg-black/95 modal-backdrop-blur">
+    
+    <!-- Top Lightbox Toolbar -->
+    <div class="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
+      <div class="flex items-center gap-3">
+        <span class="px-3 py-1 rounded-full bg-white/10 text-white text-xs font-semibold backdrop-blur-md" id="lightboxCounter">
+          1 / 1
+        </span>
+        <span class="text-xs text-slate-400 hidden sm:inline" id="lightboxDate"></span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- Download Original -->
+        <a id="lightboxDownloadBtn" href="#" download="lumina-photo.jpg" class="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition backdrop-blur-md" title="Download Image">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+          </svg>
+        </a>
+        <!-- Close -->
+        <button onclick="closeLightbox()" class="p-2.5 rounded-full bg-white/10 hover:bg-rose-600 text-white transition backdrop-blur-md" title="Close (Esc)">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Arrows -->
+    <button onclick="navigateLightbox(-1)" id="lightboxPrevBtn" class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition z-10" title="Previous (Left Arrow)">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+      </svg>
+    </button>
+
+    <button onclick="navigateLightbox(1)" id="lightboxNextBtn" class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition z-10" title="Next (Right Arrow)">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+      </svg>
+    </button>
+
+    <!-- Main Lightbox Content Area -->
+    <div class="w-full h-full max-w-6xl flex flex-col items-center justify-center p-2 sm:p-8 select-none">
+      
+      <!-- Image Display Area -->
+      <div class="relative flex-grow flex items-center justify-center max-h-[75vh] w-full overflow-hidden">
+        <img id="lightboxImg" src="" alt="Enlarged Photo" class="max-h-full max-w-full object-contain rounded-2xl shadow-2xl transition-transform duration-300">
+      </div>
+
+      <!-- Bottom Caption Bar -->
+      <div class="w-full max-w-3xl mt-4 px-6 py-4 rounded-2xl bg-slate-900/80 border border-slate-800 backdrop-blur-md text-left transition-all">
+        <h3 id="lightboxTitle" class="text-lg font-bold text-white mb-1"></h3>
+        <p id="lightboxDescription" class="text-sm text-slate-300 leading-relaxed max-h-24 overflow-y-auto pr-2"></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 5. DELETE PHOTO CONFIRMATION DIALOG -->
+  <div id="deleteModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 modal-backdrop-blur">
+    <div class="relative w-full max-w-sm glass-modal rounded-3xl p-6 shadow-2xl border border-slate-700/80 text-center">
+      <div class="w-12 h-12 mx-auto mb-4 rounded-2xl bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-400">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-bold text-white mb-2">Delete Photograph?</h3>
+      <p class="text-xs text-slate-400 mb-6">
+        This action cannot be undone. This photograph will be permanently removed from the gallery.
+      </p>
+      <div class="flex items-center justify-center gap-3">
+        <button onclick="closeDeleteModal()" class="px-5 py-2 rounded-xl border border-slate-700 text-sm font-medium text-slate-300 hover:bg-slate-800 transition">
+          Cancel
+        </button>
+        <button id="confirmDeleteBtn" onclick="executeDeletePhoto()" class="px-5 py-2 rounded-xl bg-rose-600 text-sm font-semibold text-white hover:bg-rose-500 transition shadow-lg shadow-rose-600/30">
+          Yes, Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. CLEAR LOGS CONFIRMATION DIALOG -->
+  <div id="clearLogsModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 modal-backdrop-blur">
+    <div class="relative w-full max-w-sm glass-modal rounded-3xl p-6 shadow-2xl border border-slate-700/80 text-center">
+      <div class="w-12 h-12 mx-auto mb-4 rounded-2xl bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-400">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-bold text-white mb-2">Clear Activity History?</h3>
+      <p class="text-xs text-slate-400 mb-6">
+        All tracked visitor interactions, logins, and audit logs will be permanently wiped from localStorage.
+      </p>
+      <div class="flex items-center justify-center gap-3">
+        <button onclick="closeClearLogsModal()" class="px-5 py-2 rounded-xl border border-slate-700 text-sm font-medium text-slate-300 hover:bg-slate-800 transition">
+          Cancel
+        </button>
+        <button onclick="executeClearLogs()" class="px-5 py-2 rounded-xl bg-rose-600 text-sm font-semibold text-white hover:bg-rose-500 transition shadow-lg shadow-rose-600/30">
+          Wipe History
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- ================= JAVASCRIPT APPLICATION LOGIC ================= -->
+  <script>
+    /**
+     * LUMINA PHOTO GALLERY - FULL AUDIT & ADMIN PORTAL
+     * Pure Vanilla JavaScript + LocalStorage Persistence
+     */
+
+    // --- CONFIGURATION & CREDENTIALS ---
+    const ADMIN_CONFIG = {
+      username: "chathumal",
+      password: "aaaaa1234",
+      role: "admin",
+      displayName: "Chathumal (Admin)"
+    };
+
+    const STORAGE_KEYS = {
+      PHOTOS: 'lumina_poto_photos_v3',
+      USERS: 'lumina_poto_users_v3',
+      SESSION: 'lumina_poto_session_v3',
+      LOGS: 'lumina_poto_activity_logs_v3'
+    };
+
+    // --- APPLICATION STATE ---
+    let currentSession = null;      // null OR { role: 'admin'|'user', username, name, email }
+    let photosList = [];            // Array of { id, title, description, imageUrl, createdAt, updatedAt }
+    let registeredUsers = [];       // Array of { id, username, email, password, name, createdAt }
+    let activityLogs = [];          // Array of { id, timestamp, type, actor, role, description, meta }
+    
+    // View state
+    let activeView = 'gallery';     // 'gallery' | 'admin'
+    let activeAdminSubTab = 'photos'; // 'photos' | 'history'
+    let currentLogFilter = 'all';    // 'all' | 'photo_view' | 'auth' | 'admin'
+    let currentLightboxIndex = 0;
+    let filteredGalleryPhotos = [];
+    let pendingUploadImageBase64 = null;
+    let pendingEditImageBase64 = null;
+    let pendingDeletePhotoId = null;
+
+    // --- INITIALIZATION ---
+    document.addEventListener('DOMContentLoaded', () => {
+      loadStorageData();
+      renderNavAuth();
+      navigateTo('gallery');
+      setupKeyboardNavigation();
+
+      // Log initial page visit
+      logActivity('visit', 'Visitor landed on Lumina Gallery');
+    });
+
+    /**
+     * Load persisted data from localStorage
+     * Requirement: Default state MUST start completely empty.
+     */
+    function loadStorageData() {
+      try {
+        const storedPhotos = localStorage.getItem(STORAGE_KEYS.PHOTOS);
+        photosList = storedPhotos ? JSON.parse(storedPhotos) : [];
+      } catch (e) {
+        photosList = [];
+      }
+
+      try {
+        const storedUsers = localStorage.getItem(STORAGE_KEYS.USERS);
+        registeredUsers = storedUsers ? JSON.parse(storedUsers) : [];
+      } catch (e) {
+        registeredUsers = [];
+      }
+
+      try {
+        const storedSession = localStorage.getItem(STORAGE_KEYS.SESSION);
+        currentSession = storedSession ? JSON.parse(storedSession) : null;
+      } catch (e) {
+        currentSession = null;
+      }
+
+      try {
+        const storedLogs = localStorage.getItem(STORAGE_KEYS.LOGS);
+        activityLogs = storedLogs ? JSON.parse(storedLogs) : [];
+      } catch (e) {
+        activityLogs = [];
+      }
+    }
+
+    function savePhotosToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEYS.PHOTOS, JSON.stringify(photosList));
+      } catch (e) {
+        if (e.name === 'QuotaExceededError' || e.code === 22) {
+          showToast("Storage quota reached. Consider using image web URLs.", "error");
+        } else {
+          showToast("Failed to save photos to storage.", "error");
+        }
+      }
+    }
+
+    function saveUsersToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(registeredUsers));
+      } catch (e) {
+        showToast("Failed to save user account.", "error");
+      }
+    }
+
+    function saveSessionToStorage(session) {
+      currentSession = session;
+      if (session) {
+        localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(session));
+      } else {
+        localStorage.removeItem(STORAGE_KEYS.SESSION);
+      }
+      renderNavAuth();
+    }
+
+    function saveLogsToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEYS.LOGS, JSON.stringify(activityLogs));
+      } catch (e) {
+        console.error("Could not persist activity log:", e);
+      }
+    }
+
+    function isAdmin() {
+      return currentSession && currentSession.role === 'admin' && currentSession.username === ADMIN_CONFIG.username;
+    }
+
+    // --- VISITOR & USER ACTIVITY LOGGER (ADMIN-ONLY VISIBILITY) ---
+    function logActivity(type, description, meta = {}) {
+      const actorName = currentSession ? (currentSession.name || currentSession.username) : 'Anonymous Visitor';
+      const actorRole = currentSession ? currentSession.role : 'visitor';
+      const actorUsername = currentSession ? currentSession.username : 'guest';
+
+      const entry = {
+        id: 'act_' + Date.now() + Math.random().toString(36).substr(2, 4),
+        timestamp: new Date().toISOString(),
+        type, // 'visit' | 'auth_login' | 'auth_signup' | 'auth_logout' | 'photo_view' | 'search' | 'admin_upload' | 'admin_edit' | 'admin_delete'
+        actor: actorName,
+        username: actorUsername,
+        role: actorRole,
+        description,
+        meta
+      };
+
+      activityLogs.unshift(entry);
+      // Keep up to 600 records to maintain fast storage performance
+      if (activityLogs.length > 600) {
+        activityLogs = activityLogs.slice(0, 600);
+      }
+      saveLogsToStorage();
+
+      // Update badge and table if admin is viewing
+      const badge = document.getElementById('adminHistoryBadge');
+      if (badge) badge.innerText = activityLogs.length;
+
+      const logCountEl = document.getElementById('adminTotalLogsCount');
+      if (logCountEl) logCountEl.innerText = activityLogs.length;
+
+      if (activeView === 'admin' && activeAdminSubTab === 'history') {
+        renderActivityLogs();
+      }
+    }
+
+    // --- ROUTING & VIEW NAVIGATION ---
+    function navigateTo(viewName) {
+      if (viewName === 'admin') {
+        if (!isAdmin()) {
+          showToast("Admin access required. Please log in as administrator.", "info");
+          openAdminLoginModal();
+          return;
+        }
+      }
+
+      activeView = viewName;
+      const viewGallery = document.getElementById('viewGallery');
+      const viewAdmin = document.getElementById('viewAdmin');
+      const tabGallery = document.getElementById('navTabGallery');
+      const tabAdmin = document.getElementById('navTabAdmin');
+
+      if (viewName === 'gallery') {
+        viewGallery.classList.remove('hidden');
+        viewAdmin.classList.add('hidden');
+        
+        tabGallery.className = "px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 text-white bg-slate-800 shadow-sm flex items-center gap-2";
+        tabAdmin.className = "px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 text-slate-400 hover:text-slate-200 flex items-center gap-2";
+        renderGallery();
+      } else if (viewName === 'admin') {
+        viewGallery.classList.add('hidden');
+        viewAdmin.classList.remove('hidden');
+
+        tabAdmin.className = "px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 text-white bg-slate-800 shadow-sm flex items-center gap-2";
+        tabGallery.className = "px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 text-slate-400 hover:text-slate-200 flex items-center gap-2";
+        renderAdminDashboard();
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function handleAdminTabClick() {
+      if (isAdmin()) {
+        navigateTo('admin');
+      } else {
+        openAdminLoginModal();
+      }
+    }
+
+    // --- ADMIN SUB-TAB SWITCHER (PHOTOS VS VISITOR HISTORY) ---
+    function switchAdminSubTab(subTab) {
+      if (!isAdmin()) return;
+      activeAdminSubTab = subTab;
+
+      const tabPhotos = document.getElementById('adminSubTabPhotos');
+      const tabHistory = document.getElementById('adminSubTabHistory');
+      const panelPhotos = document.getElementById('adminPanelPhotos');
+      const panelHistory = document.getElementById('adminPanelHistory');
+
+      if (subTab === 'photos') {
+        tabPhotos.className = "px-4 py-2 rounded-xl text-xs font-semibold transition bg-brand-600 text-white flex items-center gap-2";
+        tabHistory.className = "px-4 py-2 rounded-xl text-xs font-semibold transition text-slate-400 hover:text-white hover:bg-slate-800 flex items-center gap-2";
+        panelPhotos.classList.remove('hidden');
+        panelHistory.classList.add('hidden');
+        renderAdminDashboard();
+      } else {
+        tabHistory.className = "px-4 py-2 rounded-xl text-xs font-semibold transition bg-brand-600 text-white flex items-center gap-2";
+        tabPhotos.className = "px-4 py-2 rounded-xl text-xs font-semibold transition text-slate-400 hover:text-white hover:bg-slate-800 flex items-center gap-2";
+        panelHistory.classList.remove('hidden');
+        panelPhotos.classList.add('hidden');
+        renderActivityLogs();
+      }
+    }
+
+    // --- NAVIGATION BAR AUTH CONTROLS ---
+    function renderNavAuth() {
+      const container = document.getElementById('authHeaderContainer');
+      const adminBadge = document.getElementById('navAdminBadge');
+      
+      if (isAdmin()) {
+        adminBadge.classList.remove('hidden');
+      } else {
+        adminBadge.classList.add('hidden');
+      }
+
+      if (!currentSession) {
+        // Visitor view
+        container.innerHTML = `
+          <button onclick="openUserAuthModal('signin')" class="px-3.5 py-1.5 text-xs font-semibold rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition">
+            Sign In
+          </button>
+          <button onclick="openUserAuthModal('signup')" class="px-4 py-1.5 text-xs font-semibold rounded-xl bg-brand-600 text-white hover:bg-brand-500 shadow-lg shadow-brand-500/20 transition">
+            Sign Up
+          </button>
+        `;
+      } else if (isAdmin()) {
+        // Admin active session
+        container.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="text-xs font-bold text-emerald-300">Admin: chathumal</span>
+            </div>
+            <button onclick="navigateTo('admin')" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-xs font-medium text-slate-200 hover:text-white hover:bg-slate-700 transition">
+              <svg class="w-3.5 h-3.5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              Manage
+            </button>
+            <button onclick="handleSignOut()" class="px-3 py-1.5 text-xs font-semibold rounded-xl text-rose-300 hover:text-rose-100 hover:bg-rose-500/20 transition">
+              Sign Out
+            </button>
+          </div>
+        `;
+      } else {
+        // Regular user logged in
+        container.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700">
+              <div class="w-5 h-5 rounded-full bg-brand-600 flex items-center justify-center text-[10px] font-bold text-white uppercase">
+                ${(currentSession.name || currentSession.username || 'U')[0]}
+              </div>
+              <span class="text-xs font-medium text-slate-200 truncate max-w-[100px] sm:max-w-none">
+                ${escapeHTML(currentSession.name || currentSession.username)}
+              </span>
+            </div>
+            <button onclick="handleSignOut()" class="px-3 py-1.5 text-xs font-semibold rounded-xl text-slate-400 hover:text-rose-300 hover:bg-rose-500/10 transition">
+              Sign Out
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    // --- ADMIN AUTHENTICATION (chathumal / aaaaa1234) ---
+    function openAdminLoginModal() {
+      const modal = document.getElementById('adminLoginModal');
+      const content = document.getElementById('adminLoginModalContent');
+      document.getElementById('adminLoginForm').reset();
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        content.classList.remove('scale-95', 'opacity-0');
+        content.classList.add('scale-100', 'opacity-100');
+      }, 10);
+    }
+
+    function closeAdminLoginModal() {
+      const modal = document.getElementById('adminLoginModal');
+      const content = document.getElementById('adminLoginModalContent');
+      content.classList.remove('scale-100', 'opacity-100');
+      content.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 150);
+    }
+
+    function handleAdminLoginSubmit(e) {
+      e.preventDefault();
+      const uInput = document.getElementById('adminInputUsername').value.trim();
+      const pInput = document.getElementById('adminInputPassword').value;
+
+      if (uInput === ADMIN_CONFIG.username && pInput === ADMIN_CONFIG.password) {
+        saveSessionToStorage({
+          role: 'admin',
+          username: ADMIN_CONFIG.username,
+          name: ADMIN_CONFIG.displayName
+        });
+
+        logActivity('auth_login', `Administrator logged in successfully (${ADMIN_CONFIG.username})`);
+        showToast("Welcome back, Administrator!", "success");
+        closeAdminLoginModal();
+        navigateTo('admin');
+      } else {
+        logActivity('auth_login', `Failed admin login attempt using username: "${uInput}"`);
+        showToast("Invalid admin credentials. Please try again.", "error");
+      }
+    }
+
+    // --- REGULAR VISITOR AUTHENTICATION (SIGN IN & SIGN UP) ---
+    function openUserAuthModal(tab = 'signin') {
+      const modal = document.getElementById('userAuthModal');
+      const content = document.getElementById('userAuthModalContent');
+      switchUserAuthTab(tab);
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        content.classList.remove('scale-95', 'opacity-0');
+        content.classList.add('scale-100', 'opacity-100');
+      }, 10);
+    }
+
+    function closeUserAuthModal() {
+      const modal = document.getElementById('userAuthModal');
+      const content = document.getElementById('userAuthModalContent');
+      content.classList.remove('scale-100', 'opacity-100');
+      content.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 150);
+    }
+
+    function switchUserAuthTab(tab) {
+      const btnIn = document.getElementById('userAuthTabSignIn');
+      const btnUp = document.getElementById('userAuthTabSignUp');
+      const formIn = document.getElementById('userSignInForm');
+      const formUp = document.getElementById('userSignUpForm');
+
+      if (tab === 'signin') {
+        btnIn.className = "flex-1 py-2 text-xs font-semibold rounded-lg bg-brand-600 text-white transition";
+        btnUp.className = "flex-1 py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition";
+        formIn.classList.remove('hidden');
+        formUp.classList.add('hidden');
+      } else {
+        btnUp.className = "flex-1 py-2 text-xs font-semibold rounded-lg bg-brand-600 text-white transition";
+        btnIn.className = "flex-1 py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition";
+        formUp.classList.remove('hidden');
+        formIn.classList.add('hidden');
+      }
+    }
+
+    function handleUserSignIn(e) {
+      e.preventDefault();
+      const identifier = document.getElementById('userSignInUsername').value.trim();
+      const password = document.getElementById('userSignInPassword').value;
+
+      if (!identifier || !password) {
+        showToast("Please provide both username and password.", "error");
+        return;
+      }
+
+      // Allow admin credentials here too for convenience
+      if (identifier === ADMIN_CONFIG.username && password === ADMIN_CONFIG.password) {
+        saveSessionToStorage({
+          role: 'admin',
+          username: ADMIN_CONFIG.username,
+          name: ADMIN_CONFIG.displayName
+        });
+        logActivity('auth_login', `Admin logged in via public portal (${ADMIN_CONFIG.username})`);
+        showToast("Signed in as Administrator!", "success");
+        closeUserAuthModal();
+        navigateTo('admin');
+        return;
+      }
+
+      // Check registered users
+      const foundUser = registeredUsers.find(u => 
+        (u.username.toLowerCase() === identifier.toLowerCase() || u.email.toLowerCase() === identifier.toLowerCase()) &&
+        u.password === password
+      );
+
+      if (foundUser) {
+        saveSessionToStorage({
+          role: 'user',
+          username: foundUser.username,
+          name: foundUser.name,
+          email: foundUser.email
+        });
+        logActivity('auth_login', `Regular user signed in: "${foundUser.name}" (@${foundUser.username})`);
+        showToast(`Welcome back, ${foundUser.name}!`, "success");
+        closeUserAuthModal();
+        navigateTo('gallery');
+      } else {
+        logActivity('auth_login', `Failed user sign-in attempt for identifier: "${identifier}"`);
+        showToast("Invalid credentials. Please verify your login details.", "error");
+      }
+    }
+
+    function handleUserSignUp(e) {
+      e.preventDefault();
+      const name = document.getElementById('signUpName') ? document.getElementById('signUpName').value.trim() : document.getElementById('userSignUpName').value.trim();
+      const username = document.getElementById('signUpUsername') ? document.getElementById('signUpUsername').value.trim() : document.getElementById('userSignUpUsername').value.trim();
+      const email = (document.getElementById('signUpEmail') ? document.getElementById('signUpEmail').value : document.getElementById('userSignUpEmail').value).trim().toLowerCase();
+      const password = document.getElementById('signUpPassword') ? document.getElementById('signUpPassword').value : document.getElementById('userSignUpPassword').value;
+
+      if (!name || !username || !email || !password) {
+        showToast("Please fill in all registration fields.", "error");
+        return;
+      }
+
+      if (username.toLowerCase() === ADMIN_CONFIG.username.toLowerCase()) {
+        showToast(`The username '${ADMIN_CONFIG.username}' is reserved for Administrator.`, "error");
+        return;
+      }
+
+      if (registeredUsers.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+        showToast("This username is already taken.", "error");
+        return;
+      }
+
+      if (registeredUsers.some(u => u.email.toLowerCase() === email)) {
+        showToast("An account with this email address already exists.", "error");
+        return;
+      }
+
+      const newUser = {
+        id: 'usr_' + Date.now() + Math.random().toString(36).substr(2, 4),
+        name,
+        username,
+        email,
+        password,
+        createdAt: new Date().toISOString()
+      };
+
+      registeredUsers.push(newUser);
+      saveUsersToStorage();
+
+      saveSessionToStorage({
+        role: 'user',
+        username: newUser.username,
+        name: newUser.name,
+        email: newUser.email
+      });
+
+      logActivity('auth_signup', `New user registered: "${newUser.name}" (@${newUser.username}, ${newUser.email})`);
+      showToast(`Account registered successfully! Welcome, ${newUser.name}.`, "success");
+      closeUserAuthModal();
+      document.getElementById('userSignUpForm').reset();
+    }
+
+    function handleSignOut() {
+      const previousActor = currentSession ? (currentSession.name || currentSession.username) : 'User';
+      logActivity('auth_logout', `${previousActor} signed out`);
+      saveSessionToStorage(null);
+      showToast("Signed out successfully.", "info");
+      navigateTo('gallery');
+    }
+
+    // --- PUBLIC GALLERY RENDERING ---
+    function renderGallery() {
+      const grid = document.getElementById('galleryGrid');
+      const emptyState = document.getElementById('galleryEmptyState');
+      const countEl = document.getElementById('galleryPhotoCount');
+      const searchVal = (document.getElementById('gallerySearchInput').value || '').trim().toLowerCase();
+
+      countEl.innerText = photosList.length;
+
+      filteredGalleryPhotos = photosList.filter(p => {
+        if (!searchVal) return true;
+        return (p.title && p.title.toLowerCase().includes(searchVal)) || 
+               (p.description && p.description.toLowerCase().includes(searchVal));
+      });
+
+      // Default state: strictly empty
+      if (photosList.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      if (filteredGalleryPhotos.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-12 text-center text-slate-400">
+            <svg class="w-10 h-10 mx-auto mb-2 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            No photographs match your search "${escapeHTML(searchVal)}".
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filteredGalleryPhotos.map((photo, index) => {
+        return `
+          <div 
+            onclick="openLightbox(${index})" 
+            class="group cursor-pointer rounded-2xl overflow-hidden glass-card hover:border-brand-500/50 transition-all duration-300 transform hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand-500/10 flex flex-col"
+          >
+            <!-- Image Frame -->
+            <div class="relative aspect-4/3 w-full bg-slate-900 overflow-hidden">
+              <img 
+                src="${photo.imageUrl}" 
+                alt="${escapeHTML(photo.title)}" 
+                loading="lazy" 
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'400\\' height=\\'300\\' viewBox=\\'0 0 400 300\\'%3E%3Crect fill=\\'%231e293b\\' width=\\'400\\' height=\\'300\\'/%3E%3Ctext fill=\\'%2394a3b8\\' font-family=\\'sans-serif\\' font-size=\\'14\\' x=\\'50%25\\' y=\\'50%25\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\'%3EImage Not Found%3C/text%3E%3C/svg%3E';"
+              >
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-semibold">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                  </svg>
+                  View Details
+                </span>
+              </div>
+            </div>
+
+            <!-- Card Meta Content -->
+            <div class="p-5 flex flex-col flex-grow justify-between">
+              <div>
+                <h3 class="font-bold text-slate-100 text-base line-clamp-1 group-hover:text-brand-300 transition-colors">
+                  ${escapeHTML(photo.title)}
+                </h3>
+                <p class="text-xs text-slate-400 mt-1.5 line-clamp-2 leading-relaxed">
+                  ${escapeHTML(photo.description)}
+                </p>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-500">
+                <span class="flex items-center gap-1">
+                  <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  ${formatDate(photo.createdAt)}
+                </span>
+                <span class="text-slate-400 font-medium">By Admin</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    let searchLogTimeout = null;
+    function handleGallerySearch() {
+      renderGallery();
+      const val = (document.getElementById('gallerySearchInput').value || '').trim();
+      if (val.length > 2) {
+        clearTimeout(searchLogTimeout);
+        searchLogTimeout = setTimeout(() => {
+          logActivity('search', `Visitor searched gallery for: "${val}"`);
+        }, 1200);
+      }
+    }
+
+    // --- INTERACTIVE LIGHTBOX VIEWER ---
+    function openLightbox(index) {
+      if (!filteredGalleryPhotos || !filteredGalleryPhotos[index]) return;
+      currentLightboxIndex = index;
+      updateLightboxDisplay();
+
+      const photo = filteredGalleryPhotos[currentLightboxIndex];
+      // Log the photo view event in visitor activity history
+      logActivity('photo_view', `Viewed photograph: "${photo.title}"`, { photoId: photo.id, title: photo.title });
+
+      const modal = document.getElementById('lightboxModal');
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      const modal = document.getElementById('lightboxModal');
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    function navigateLightbox(direction) {
+      if (!filteredGalleryPhotos || filteredGalleryPhotos.length <= 1) return;
+      currentLightboxIndex = (currentLightboxIndex + direction + filteredGalleryPhotos.length) % filteredGalleryPhotos.length;
+      updateLightboxDisplay();
+
+      const photo = filteredGalleryPhotos[currentLightboxIndex];
+      logActivity('photo_view', `Viewed photograph: "${photo.title}"`, { photoId: photo.id, title: photo.title });
+    }
+
+    function updateLightboxDisplay() {
+      const photo = filteredGalleryPhotos[currentLightboxIndex];
+      if (!photo) return;
+
+      const img = document.getElementById('lightboxImg');
+      const title = document.getElementById('lightboxTitle');
+      const desc = document.getElementById('lightboxDescription');
+      const counter = document.getElementById('lightboxCounter');
+      const dateEl = document.getElementById('lightboxDate');
+      const downloadBtn = document.getElementById('lightboxDownloadBtn');
+
+      img.src = photo.imageUrl;
+      title.innerText = photo.title;
+      desc.innerText = photo.description;
+      counter.innerText = `${currentLightboxIndex + 1} / ${filteredGalleryPhotos.length}`;
+      dateEl.innerText = formatDate(photo.createdAt);
+      downloadBtn.href = photo.imageUrl;
+
+      const prevBtn = document.getElementById('lightboxPrevBtn');
+      const nextBtn = document.getElementById('lightboxNextBtn');
+      if (filteredGalleryPhotos.length <= 1) {
+        prevBtn.classList.add('hidden');
+        nextBtn.classList.add('hidden');
+      } else {
+        prevBtn.classList.remove('hidden');
+        nextBtn.classList.remove('hidden');
+      }
+    }
+
+    function setupKeyboardNavigation() {
+      document.addEventListener('keydown', (e) => {
+        const lightbox = document.getElementById('lightboxModal');
+        if (!lightbox.classList.contains('hidden')) {
+          if (e.key === 'Escape') closeLightbox();
+          if (e.key === 'ArrowLeft') navigateLightbox(-1);
+          if (e.key === 'ArrowRight') navigateLightbox(1);
+        }
+      });
+    }
+
+    // --- ADMIN DASHBOARD & PHOTO UPLOAD ---
+    let uploadSourceMethod = 'file'; // 'file' | 'url'
+
+    function renderAdminDashboard() {
+      document.getElementById('adminTotalPhotos').innerText = photosList.length;
+      document.getElementById('adminTotalLogsCount').innerText = activityLogs.length;
+      document.getElementById('adminRegisteredUsersCount').innerText = registeredUsers.length;
+      document.getElementById('adminHistoryBadge').innerText = activityLogs.length;
+      renderAdminPhotosList();
+    }
+
+    function setUploadSourceMethod(method) {
+      uploadSourceMethod = method;
+      const tabFile = document.getElementById('tabUploadFile');
+      const tabUrl = document.getElementById('tabUploadUrl');
+      const areaFile = document.getElementById('uploadFileArea');
+      const areaUrl = document.getElementById('uploadUrlArea');
+
+      if (method === 'file') {
+        tabFile.className = "flex-1 py-1.5 text-xs font-semibold rounded-lg bg-brand-600 text-white transition";
+        tabUrl.className = "flex-1 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition";
+        areaFile.classList.remove('hidden');
+        areaUrl.classList.add('hidden');
+      } else {
+        tabUrl.className = "flex-1 py-1.5 text-xs font-semibold rounded-lg bg-brand-600 text-white transition";
+        tabFile.className = "flex-1 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition";
+        areaUrl.classList.remove('hidden');
+        areaFile.classList.add('hidden');
+      }
+    }
+
+    /**
+     * Canvas compressor to avoid exceeding localStorage quota
+     */
+    function compressImageFile(file, maxWidth = 1600, maxHeight = 1600, quality = 0.8) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+              if (width > maxWidth) {
+                height = Math.round((height * maxWidth) / width);
+                width = maxWidth;
+              }
+            } else {
+              if (height > maxHeight) {
+                width = Math.round((width * maxHeight) / height);
+                height = maxHeight;
+              }
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+            resolve(compressedDataUrl);
+          };
+          img.onerror = (err) => reject(err);
+        };
+        reader.onerror = (err) => reject(err);
+      });
+    }
+
+    async function handleFileSelected(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        showToast("Please choose a valid image file.", "error");
+        return;
+      }
+
+      showToast("Optimizing photograph for browser storage...", "info");
+      try {
+        const compressedBase64 = await compressImageFile(file);
+        pendingUploadImageBase64 = compressedBase64;
+        displayUploadPreview(compressedBase64);
+        showToast("Image ready for publishing.", "success");
+      } catch (err) {
+        showToast("Could not process this image file.", "error");
+      }
+    }
+
+    function handleUrlInputPreview() {
+      const url = document.getElementById('uploadUrlInput').value.trim();
+      if (!url) return;
+      displayUploadPreview(url);
+    }
+
+    function displayUploadPreview(source) {
+      const previewContainer = document.getElementById('uploadPreviewContainer');
+      const previewImg = document.getElementById('uploadPreviewImg');
+      previewImg.src = source;
+      previewContainer.classList.remove('hidden');
+    }
+
+    function clearUploadPreview() {
+      pendingUploadImageBase64 = null;
+      document.getElementById('uploadFileInput').value = '';
+      document.getElementById('uploadUrlInput').value = '';
+      document.getElementById('uploadPreviewContainer').classList.add('hidden');
+      document.getElementById('uploadPreviewImg').src = '';
+    }
+
+    function resetUploadForm() {
+      document.getElementById('uploadPhotoForm').reset();
+      clearUploadPreview();
+    }
+
+    async function handlePhotoUpload(e) {
+      e.preventDefault();
+      if (!isAdmin()) {
+        showToast("Unauthorized. Only the administrator can upload photos.", "error");
+        return;
+      }
+
+      const title = document.getElementById('uploadTitle').value.trim();
+      const description = document.getElementById('uploadDescription').value.trim();
+
+      if (!title || !description) {
+        showToast("Please provide both a title and description.", "error");
+        return;
+      }
+
+      let finalImageUrl = '';
+
+      if (uploadSourceMethod === 'file') {
+        if (!pendingUploadImageBase64) {
+          showToast("Please select an image file to upload.", "error");
+          return;
+        }
+        finalImageUrl = pendingUploadImageBase64;
+      } else {
+        const url = document.getElementById('uploadUrlInput').value.trim();
+        if (!url) {
+          showToast("Please enter an image web URL.", "error");
+          return;
+        }
+        finalImageUrl = url;
+      }
+
+      const newPhoto = {
+        id: 'poto_' + Date.now() + Math.random().toString(36).substr(2, 4),
+        title,
+        description,
+        imageUrl: finalImageUrl,
+        uploadedBy: ADMIN_CONFIG.username,
+        createdAt: new Date().toISOString()
+      };
+
+      photosList.unshift(newPhoto);
+      savePhotosToStorage();
+
+      logActivity('admin_upload', `Admin uploaded new photograph: "${newPhoto.title}"`, { photoId: newPhoto.id });
+      showToast("Photograph published successfully to the gallery!", "success");
+      resetUploadForm();
+      renderAdminDashboard();
+    }
+
+    // --- ADMIN PHOTOS MANAGEMENT (LIST, EDIT, DELETE) ---
+    function renderAdminPhotosList() {
+      const container = document.getElementById('adminPhotosContainer');
+      const searchVal = (document.getElementById('adminSearchInput').value || '').trim().toLowerCase();
+
+      const filtered = photosList.filter(p => {
+        if (!searchVal) return true;
+        return (p.title && p.title.toLowerCase().includes(searchVal)) || 
+               (p.description && p.description.toLowerCase().includes(searchVal));
+      });
+
+      if (photosList.length === 0) {
+        container.innerHTML = `
+          <div class="py-12 text-center text-slate-500">
+            <svg class="w-8 h-8 mx-auto mb-2 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            No photos uploaded yet. Use the form above to publish your first photo.
+          </div>
+        `;
+        return;
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="py-8 text-center text-slate-500">
+            No photos match your filter "${escapeHTML(searchVal)}".
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="overflow-x-auto rounded-2xl border border-slate-800">
+          <table class="w-full text-left text-sm text-slate-300">
+            <thead class="bg-slate-900/90 text-xs uppercase text-slate-400 font-semibold border-b border-slate-800">
+              <tr>
+                <th scope="col" class="py-3.5 px-4">Photo</th>
+                <th scope="col" class="py-3.5 px-4">Title & Details</th>
+                <th scope="col" class="py-3.5 px-4 hidden sm:table-cell">Date</th>
+                <th scope="col" class="py-3.5 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/80 bg-slate-950/40">
+              ${filtered.map(photo => `
+                <tr class="hover:bg-slate-900/40 transition">
+                  <td class="py-3.5 px-4">
+                    <img 
+                      src="${photo.imageUrl}" 
+                      alt="${escapeHTML(photo.title)}" 
+                      class="w-14 h-14 rounded-xl object-cover border border-slate-700 bg-slate-900"
+                    >
+                  </td>
+                  <td class="py-3.5 px-4 max-w-xs md:max-w-md">
+                    <div class="font-bold text-white text-sm line-clamp-1">${escapeHTML(photo.title)}</div>
+                    <div class="text-xs text-slate-400 line-clamp-2 mt-0.5">${escapeHTML(photo.description)}</div>
+                  </td>
+                  <td class="py-3.5 px-4 text-xs text-slate-500 hidden sm:table-cell whitespace-nowrap">
+                    ${formatDate(photo.createdAt)}
+                  </td>
+                  <td class="py-3.5 px-4 text-right whitespace-nowrap">
+                    <div class="inline-flex items-center gap-2">
+                      <button 
+                        onclick="openEditModal('${photo.id}')" 
+                        class="p-2 rounded-xl bg-slate-800 hover:bg-brand-600/30 text-brand-300 border border-slate-700 hover:border-brand-500/40 transition" 
+                        title="Edit Photo"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                      </button>
+                      <button 
+                        onclick="promptDeletePhoto('${photo.id}')" 
+                        class="p-2 rounded-xl bg-slate-800 hover:bg-rose-600/30 text-rose-400 border border-slate-700 hover:border-rose-500/40 transition" 
+                        title="Delete Photo"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    // --- EDIT PHOTO MODAL LOGIC ---
+    function openEditModal(photoId) {
+      if (!isAdmin()) {
+        showToast("Administrator privileges required.", "error");
+        return;
+      }
+
+      const photo = photosList.find(p => p.id === photoId);
+      if (!photo) return;
+
+      document.getElementById('editPhotoId').value = photo.id;
+      document.getElementById('editPhotoTitle').value = photo.title;
+      document.getElementById('editPhotoDescription').value = photo.description;
+      document.getElementById('editPhotoThumb').src = photo.imageUrl;
+      document.getElementById('editPhotoUrl').value = '';
+      document.getElementById('editFileInput').value = '';
+      pendingEditImageBase64 = null;
+
+      const modal = document.getElementById('editPhotoModal');
+      const content = document.getElementById('editModalContent');
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        content.classList.remove('scale-95', 'opacity-0');
+        content.classList.add('scale-100', 'opacity-100');
+      }, 10);
+    }
+
+    function closeEditModal() {
+      const modal = document.getElementById('editPhotoModal');
+      const content = document.getElementById('editModalContent');
+      content.classList.remove('scale-100', 'opacity-100');
+      content.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 150);
+    }
+
+    async function handleEditFileSelected(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        showToast("Please choose an image file.", "error");
+        return;
+      }
+
+      showToast("Optimizing replacement image...", "info");
+      try {
+        const compressed = await compressImageFile(file);
+        pendingEditImageBase64 = compressed;
+        document.getElementById('editPhotoThumb').src = compressed;
+        document.getElementById('editPhotoUrl').value = '';
+        showToast("New image ready to save.", "success");
+      } catch (err) {
+        showToast("Failed to process replacement image.", "error");
+      }
+    }
+
+    function handleEditUrlChange(url) {
+      url = url.trim();
+      if (url) {
+        pendingEditImageBase64 = null;
+        document.getElementById('editPhotoThumb').src = url;
+      }
+    }
+
+    function handleEditPhotoSubmit(e) {
+      e.preventDefault();
+      if (!isAdmin()) {
+        showToast("Unauthorized operation.", "error");
+        return;
+      }
+
+      const id = document.getElementById('editPhotoId').value;
+      const title = document.getElementById('editPhotoTitle').value.trim();
+      const description = document.getElementById('editPhotoDescription').value.trim();
+      const newUrl = document.getElementById('editPhotoUrl').value.trim();
+
+      const photoIndex = photosList.findIndex(p => p.id === id);
+      if (photoIndex === -1) {
+        showToast("Photo not found.", "error");
+        return;
+      }
+
+      const oldTitle = photosList[photoIndex].title;
+      photosList[photoIndex].title = title;
+      photosList[photoIndex].description = description;
+      photosList[photoIndex].updatedAt = new Date().toISOString();
+
+      if (pendingEditImageBase64) {
+        photosList[photoIndex].imageUrl = pendingEditImageBase64;
+      } else if (newUrl) {
+        photosList[photoIndex].imageUrl = newUrl;
+      }
+
+      savePhotosToStorage();
+      logActivity('admin_edit', `Admin updated photograph: "${title}" (previously "${oldTitle}")`, { photoId: id });
+      showToast("Photo updated successfully!", "success");
+      closeEditModal();
+      renderAdminDashboard();
+    }
+
+    // --- DELETE PHOTO CONFIRMATION ---
+    function promptDeletePhoto(photoId) {
+      if (!isAdmin()) {
+        showToast("Administrator privileges required.", "error");
+        return;
+      }
+      pendingDeletePhotoId = photoId;
+      document.getElementById('deleteModal').classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+      pendingDeletePhotoId = null;
+      document.getElementById('deleteModal').classList.add('hidden');
+    }
+
+    function executeDeletePhoto() {
+      if (!isAdmin() || !pendingDeletePhotoId) {
+        closeDeleteModal();
+        return;
+      }
+
+      const toDelete = photosList.find(p => p.id === pendingDeletePhotoId);
+      const title = toDelete ? toDelete.title : 'Photo';
+
+      photosList = photosList.filter(p => p.id !== pendingDeletePhotoId);
+      savePhotosToStorage();
+      logActivity('admin_delete', `Admin permanently deleted photograph: "${title}"`, { photoId: pendingDeletePhotoId });
+
+      showToast("Photo was successfully deleted.", "info");
+      closeDeleteModal();
+      renderAdminDashboard();
+    }
+
+    // --- ADMIN VISITOR ACTIVITY LOGS VIEW & CONTROLS ---
+    function filterLogs(filterType) {
+      currentLogFilter = filterType;
+      
+      const btnAll = document.getElementById('logFilterAll');
+      const btnView = document.getElementById('logFilterView');
+      const btnAuth = document.getElementById('logFilterAuth');
+      const btnAdmin = document.getElementById('logFilterAdmin');
+
+      [btnAll, btnView, btnAuth, btnAdmin].forEach(btn => {
+        btn.className = "px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition";
+      });
+
+      if (filterType === 'all') btnAll.className = "px-3 py-1.5 rounded-xl bg-brand-600 text-white font-semibold transition";
+      if (filterType === 'photo_view') btnView.className = "px-3 py-1.5 rounded-xl bg-brand-600 text-white font-semibold transition";
+      if (filterType === 'auth') btnAuth.className = "px-3 py-1.5 rounded-xl bg-brand-600 text-white font-semibold transition";
+      if (filterType === 'admin') btnAdmin.className = "px-3 py-1.5 rounded-xl bg-brand-600 text-white font-semibold transition";
+
+      renderActivityLogs();
+    }
+
+    function renderActivityLogs() {
+      // Security guard: only the logged-in admin can view activity logs!
+      if (!isAdmin()) {
+        const container = document.getElementById('activityLogsTableContainer');
+        if (container) container.innerHTML = '<div class="p-6 text-center text-rose-400">Access Denied.</div>';
+        return;
+      }
+
+      const container = document.getElementById('activityLogsTableContainer');
+      const searchVal = (document.getElementById('logSearchInput').value || '').trim().toLowerCase();
+
+      let filtered = activityLogs.filter(log => {
+        // Filter by category
+        if (currentLogFilter === 'photo_view' && log.type !== 'photo_view') return false;
+        if (currentLogFilter === 'auth' && !log.type.startsWith('auth_')) return false;
+        if (currentLogFilter === 'admin' && !log.type.startsWith('admin_')) return false;
+
+        // Filter by search query
+        if (searchVal) {
+          const matchDesc = log.description && log.description.toLowerCase().includes(searchVal);
+          const matchActor = log.actor && log.actor.toLowerCase().includes(searchVal);
+          const matchType = log.type && log.type.toLowerCase().includes(searchVal);
+          return matchDesc || matchActor || matchType;
+        }
+        return true;
+      });
+
+      if (activityLogs.length === 0) {
+        container.innerHTML = `
+          <div class="py-12 text-center text-slate-500">
+            <svg class="w-8 h-8 mx-auto mb-2 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            No visitor or user activity has been recorded yet.
+          </div>
+        `;
+        return;
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="py-8 text-center text-slate-500">
+            No activity records match your current filter and search query.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-900/90 uppercase text-[11px] text-slate-400 font-semibold border-b border-slate-800">
+            <tr>
+              <th scope="col" class="py-3 px-4">Event Type</th>
+              <th scope="col" class="py-3 px-4">Actor</th>
+              <th scope="col" class="py-3 px-4">Activity Description</th>
+              <th scope="col" class="py-3 px-4 text-right">Timestamp</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/80 bg-slate-950/40">
+            ${filtered.map(log => {
+              let badgeColor = 'bg-slate-800 text-slate-300 border-slate-700';
+              let badgeIcon = '📌';
+              let label = 'Interaction';
+
+              if (log.type === 'photo_view') {
+                badgeColor = 'bg-cyan-500/10 text-cyan-300 border-cyan-500/30';
+                badgeIcon = '👁️';
+                label = 'Photo View';
+              } else if (log.type === 'auth_login') {
+                badgeColor = 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30';
+                badgeIcon = '🔑';
+                label = 'User Sign-In';
+              } else if (log.type === 'auth_signup') {
+                badgeColor = 'bg-brand-500/10 text-brand-300 border-brand-500/30';
+                badgeIcon = '✨';
+                label = 'Account Created';
+              } else if (log.type === 'auth_logout') {
+                badgeColor = 'bg-slate-700/30 text-slate-400 border-slate-700';
+                badgeIcon = '🚪';
+                label = 'Sign-Out';
+              } else if (log.type.startsWith('admin_')) {
+                badgeColor = 'bg-amber-500/10 text-amber-300 border-amber-500/30';
+                badgeIcon = '⚡';
+                label = 'Admin Action';
+              } else if (log.type === 'search') {
+                badgeColor = 'bg-indigo-500/10 text-indigo-300 border-indigo-500/30';
+                badgeIcon = '🔍';
+                label = 'Gallery Search';
+              } else if (log.type === 'visit') {
+                badgeColor = 'bg-slate-800 text-slate-400 border-slate-700';
+                badgeIcon = '🌐';
+                label = 'Site Visit';
+              }
+
+              let roleBadge = '<span class="text-[10px] text-slate-500 font-mono">Visitor</span>';
+              if (log.role === 'admin') {
+                roleBadge = '<span class="text-[10px] text-amber-400 font-semibold uppercase">Admin</span>';
+              } else if (log.role === 'user') {
+                roleBadge = '<span class="text-[10px] text-brand-300 font-medium">User</span>';
+              }
+
+              return `
+                <tr class="hover:bg-slate-900/50 transition">
+                  <td class="py-3 px-4 whitespace-nowrap">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border ${badgeColor}">
+                      <span>${badgeIcon}</span>
+                      <span>${label}</span>
+                    </span>
+                  </td>
+                  <td class="py-3 px-4 whitespace-nowrap">
+                    <div class="font-medium text-white">${escapeHTML(log.actor)}</div>
+                    <div>${roleBadge}</div>
+                  </td>
+                  <td class="py-3 px-4 font-normal text-slate-200">
+                    ${escapeHTML(log.description)}
+                  </td>
+                  <td class="py-3 px-4 text-right text-slate-400 whitespace-nowrap font-mono text-[11px]">
+                    ${formatDateFull(log.timestamp)}
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function promptClearLogs() {
+      if (!isAdmin()) return;
+      document.getElementById('clearLogsModal').classList.remove('hidden');
+    }
+
+    function closeClearLogsModal() {
+      document.getElementById('clearLogsModal').classList.add('hidden');
+    }
+
+    function executeClearLogs() {
+      if (!isAdmin()) return;
+      activityLogs = [];
+      saveLogsToStorage();
+      closeClearLogsModal();
+      showToast("Activity history wiped clean.", "info");
+      renderAdminDashboard();
+      renderActivityLogs();
+    }
+
+    function exportLogsAsJSON() {
+      if (!isAdmin()) return;
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(activityLogs, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `lumina_visitor_activity_${Date.now()}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("Activity logs exported successfully!", "success");
+    }
+
+    // --- UTILITIES: TOASTS & HELPERS ---
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      
+      let borderClass = 'border-brand-500/40 text-brand-300';
+      let icon = `
+        <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      `;
+
+      if (type === 'success') {
+        borderClass = 'border-emerald-500/40 text-emerald-300';
+        icon = `
+          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        `;
+      } else if (type === 'error') {
+        borderClass = 'border-rose-500/40 text-rose-300';
+        icon = `
+          <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        `;
+      }
+
+      toast.className = `pointer-events-auto flex items-center gap-3 p-4 rounded-2xl glass-modal border ${borderClass} shadow-xl transform transition-all duration-300 translate-y-3 opacity-0`;
+      toast.innerHTML = `
+        <div class="flex-shrink-0">${icon}</div>
+        <div class="text-xs font-medium text-slate-100 flex-grow">${escapeHTML(message)}</div>
+      `;
+
+      container.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.classList.remove('translate-y-3', 'opacity-0');
+      }, 10);
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3800);
+    }
+
+    function formatDate(isoString) {
+      if (!isoString) return 'Recent';
+      try {
+        const d = new Date(isoString);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      } catch (e) {
+        return 'Recent';
+      }
+    }
+
+    function formatDateFull(isoString) {
+      if (!isoString) return '';
+      try {
+        const d = new Date(isoString);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      } catch (e) {
+        return '';
+      }
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
